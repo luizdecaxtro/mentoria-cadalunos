@@ -416,18 +416,18 @@
 
 // ── CONFIGURAÇÃO ─────────────────────────────────────────
 const CONFIG = {
-  token:       '',   // << COLE O TOKEN AQUI >>
   repo:        'luizdecaxtro/mentoria-cadalunos',
   file:        'cadalunos.json',
   redirectUrl: 'https://lojasdecastro.com.br/pagamento-da-mentoria'
 };
+function getToken() { return localStorage.getItem('_mtoken') || ''; }
 // ─────────────────────────────────────────────────────────
 
 let fileSha = null;
 
 function buildHeaders() {
   return {
-    'Authorization': 'Bearer ' + CONFIG.token,
+    'Authorization': 'Bearer ' + getToken(),
     'Accept': 'application/vnd.github+json',
     'Content-Type': 'application/json',
     'X-GitHub-Api-Version': '2022-11-28'
@@ -479,7 +479,7 @@ async function enviarCadastro() {
   if (!nome)    { toast('Por favor, informe seu nome completo.', 'error'); return; }
   if (!email)   { toast('Por favor, informe um e-mail válido.', 'error'); return; }
   if (!celular) { toast('Por favor, informe seu celular.', 'error'); return; }
-  if (!CONFIG.token) { toast('Sistema em configuração. Tente mais tarde.', 'error'); return; }
+  if (!getToken()) { toast('Sistema em configuração. Tente mais tarde.', 'error'); return; }
 
   document.getElementById('btn-enviar').disabled = true;
   showLoading();
@@ -568,6 +568,39 @@ function toast(msg, type='') {
 
 function showLoading() { document.getElementById('loading').classList.add('active'); }
 function hideLoading() { document.getElementById('loading').classList.remove('active'); }
+
+// ── PAINEL SECRETO DE CONFIGURAÇÃO ───────────────────────
+// Acesse: formulario-matricula.html#config
+function checkSecretPanel() {
+  if (window.location.hash === '#config') {
+    document.getElementById('secret-panel').style.display = 'flex';
+    const saved = getToken();
+    if (saved) document.getElementById('sp-token').value = saved;
+  }
+}
+
+function saveSecretToken() {
+  const t = document.getElementById('sp-token').value.trim();
+  if (!t) { alert('Cole o token antes de salvar.'); return; }
+  localStorage.setItem('_mtoken', t);
+  document.getElementById('secret-panel').style.display = 'none';
+  window.location.hash = '';
+  alert('✅ Token salvo! O formulário está pronto para uso.');
+}
+
+window.addEventListener('hashchange', checkSecretPanel);
+checkSecretPanel();
 </script>
+
+<!-- PAINEL SECRETO -->
+<div id="secret-panel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:36px;max-width:460px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:8px;color:#0e0b08;">⚙️ Configuração</h3>
+    <p style="font-size:0.82rem;color:#888;margin-bottom:20px;">Cole o token do GitHub. Esta tela só aparece com <code>#config</code> na URL.</p>
+    <label style="font-size:0.75rem;font-weight:600;color:#a0521e;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:6px;">Token GitHub (PAT)</label>
+    <input type="password" id="sp-token" placeholder="github_pat_..." style="width:100%;padding:11px 14px;border:1.5px solid #d4b896;border-radius:8px;font-size:0.9rem;margin-bottom:16px;font-family:'Jost',sans-serif;">
+    <button onclick="saveSecretToken()" style="width:100%;padding:13px;background:linear-gradient(135deg,#6b3d1e,#c4864a);color:#fff;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-weight:600;font-size:0.95rem;cursor:pointer;">💾 Salvar Token</button>
+  </div>
+</div>
 </body>
 </html>

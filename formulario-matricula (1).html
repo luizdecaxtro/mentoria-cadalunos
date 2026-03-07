@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro de Matrícula — Mentoria das Profissões + IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:   #0e0b08;
+    --brown:   #6b3d1e;
+    --brown2:  #8b5230;
+    --caramel: #a0521e;
+    --cream:   #fdf6ee;
+    --parchment: #f5e9d8;
+    --border:  #d4b896;
+    --shadow:  rgba(107,61,30,0.12);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Fundo decorativo */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(196,134,74,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 90% 90%, rgba(107,61,30,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236b3d1e' fill-opacity='0.035'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 560px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(28px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* Cabeçalho */
+  .page-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .logo-ring {
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    border: 2px solid var(--caramel);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    background: rgba(160,82,30,0.08);
+    box-shadow: 0 0 24px rgba(160,82,30,0.15);
+    font-size: 1.8rem;
+  }
+
+  .page-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+  }
+
+  .page-header h1 span {
+    color: var(--caramel);
+  }
+
+  .page-header p {
+    margin-top: 10px;
+    color: #7a5c44;
+    font-size: 0.88rem;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  .divider {
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--caramel), transparent);
+    margin: 14px auto 0;
+  }
+
+  /* Card do formulário */
+  .card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 44px;
+    box-shadow: 0 8px 40px var(--shadow), 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .form-group {
+    margin-bottom: 22px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    margin-bottom: 8px;
+  }
+
+  .form-group label .req {
+    color: #c0392b;
+    margin-left: 2px;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    background: var(--parchment);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    color: var(--black);
+    transition: all 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .form-group input::placeholder { color: #b09070; }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--caramel);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(160,82,30,0.1);
+  }
+
+  .form-group select option {
+    background: #fff;
+    color: var(--black);
+  }
+
+  .select-wrap {
+    position: relative;
+  }
+
+  .select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--caramel);
+    pointer-events: none;
+    font-size: 0.9rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Botão */
+  .btn-submit {
+    width: 100%;
+    margin-top: 8px;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--brown), var(--caramel));
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(107,61,30,0.4);
+  }
+
+  .btn-submit::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--caramel), var(--brown2));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .btn-submit:hover::before { opacity: 1; }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(107,61,30,0.5); }
+  .btn-submit:active { transform: translateY(0); }
+
+  .btn-submit span { position: relative; z-index: 1; }
+
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Nota de privacidade */
+  .privacy-note {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 0.75rem;
+    color: #9a7a60;
+    line-height: 1.5;
+  }
+
+  .privacy-note a { color: var(--caramel); text-decoration: none; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #fff;
+    color: var(--black);
+    padding: 13px 24px;
+    border-radius: 10px;
+    font-size: 0.87rem;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--caramel);
+    box-shadow: 0 8px 28px rgba(107,61,30,0.15);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 200;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  #toast.error { border-left-color: #c0392b; }
+  #toast.success { border-left-color: #4a7c59; }
+
+  /* Loading */
+  #loading {
+    position: fixed; inset: 0;
+    background: rgba(245,237,227,0.88);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    flex-direction: column;
+    gap: 16px;
+  }
+  #loading.active { display:flex; }
+  .spinner {
+    width: 42px; height: 42px;
+    border: 3px solid rgba(196,134,74,0.2);
+    border-top-color: var(--caramel);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  #loading p { color: var(--brown); font-size: 0.88rem; letter-spacing: 0.06em; }
+
+  /* Tela de sucesso */
+  #success-screen {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+    animation: fadeUp 0.5s ease both;
+  }
+  #success-screen.active { display: block; }
+  .success-icon {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 2px solid #4a7c59;
+    background: rgba(74,124,89,0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    box-shadow: 0 0 30px rgba(74,124,89,0.2);
+  }
+  #success-screen h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 12px;
+  }
+  #success-screen p { color: #7a5c44; font-size: 0.9rem; line-height: 1.6; }
+  .redirect-bar {
+    margin-top: 24px;
+    background: rgba(196,134,74,0.1);
+    border: 1px solid rgba(196,134,74,0.2);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 0.82rem;
+    color: var(--caramel);
+  }
+
+  @media(max-width: 520px) {
+    .card { padding: 28px 22px; }
+    .form-row { grid-template-columns: 1fr; }
+    .page-header h1 { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div class="logo-ring">🎓</div>
+    <h1>Mentoria das<br><span>Profissões + IA</span></h1>
+    <p>Preencha seus dados para iniciar a matrícula</p>
+    <div class="divider"></div>
+  </div>
+
+  <div class="card">
+
+    <!-- FORMULÁRIO -->
+    <div id="form-section">
+      <div class="form-group">
+        <label>Nome Completo <span class="req">*</span></label>
+        <input type="text" id="f-nome" placeholder="Seu nome completo" autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label>E-mail <span class="req">*</span></label>
+        <input type="email" id="f-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Celular <span class="req">*</span></label>
+          <input type="tel" id="f-celular" placeholder="(00) 00000-0000" oninput="maskPhone(this)" autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label>Sexo</label>
+          <div class="select-wrap">
+            <select id="f-sexo">
+              <option value="">Selecione</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+              <option value="O">Prefiro não dizer</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Grau de Instrução</label>
+        <div class="select-wrap">
+          <select id="f-instrucao">
+            <option value="">Selecione</option>
+            <option value="Ensino Fundamental">Ensino Fundamental</option>
+            <option value="Ensino Médio">Ensino Médio</option>
+            <option value="Técnico">Técnico</option>
+            <option value="Superior Incompleto">Superior Incompleto</option>
+            <option value="Superior Completo">Superior Completo</option>
+            <option value="Pós-Graduação">Pós-Graduação / MBA</option>
+            <option value="Mestrado">Mestrado</option>
+            <option value="Doutorado">Doutorado</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="btn-enviar" onclick="enviarCadastro()">
+        <span>Continuar para o Pagamento →</span>
+      </button>
+
+      <p class="privacy-note">
+        Seus dados são armazenados com segurança e usados apenas<br>
+        para gestão da sua matrícula na mentoria.
+      </p>
+    </div>
+
+    <!-- TELA DE SUCESSO -->
+    <div id="success-screen">
+      <div class="success-icon">✓</div>
+      <h2>Cadastro realizado!</h2>
+      <p>Seus dados foram registrados com sucesso.<br>Você será redirecionado para o pagamento.</p>
+      <div class="redirect-bar" id="redirect-msg">Redirecionando em 3 segundos…</div>
+    </div>
+
+  </div>
+</div>
+
+<div id="loading"><div class="spinner"></div><p>Salvando cadastro…</p></div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+// ── CONFIGURAÇÃO ─────────────────────────────────────────
+const CONFIG = {
+  token:       '',   // << COLE O TOKEN AQUI >>
+  repo:        'luizdecaxtro/mentoria-cadalunos',
+  file:        'cadalunos.json',
+  redirectUrl: 'https://lojasdecastro.com.br/pagamento-da-mentoria'
+};
+// ─────────────────────────────────────────────────────────
+
+let fileSha = null;
+
+function buildHeaders() {
+  return {
+    'Authorization': 'Bearer ' + CONFIG.token,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+}
+
+// Inicializa o arquivo no GitHub se não existir
+async function ensureFileExists() {
+  const url = `https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.file}`;
+  const res = await fetch(url, { headers: buildHeaders() });
+  if (res.status === 404) {
+    // Cria o arquivo vazio
+    const body = {
+      message: 'Inicialização do cadastro de alunos',
+      content: btoa('[]')
+    };
+    const create = await fetch(url, {
+      method: 'PUT',
+      headers: buildHeaders(),
+      body: JSON.stringify(body)
+    });
+    if (!create.ok) throw new Error('Não foi possível inicializar o banco de dados.');
+  }
+}
+
+async function getFileSha() {
+  const res = await fetch(
+    `https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.file}`,
+    { headers: buildHeaders() }
+  );
+  if (res.ok) {
+    const data = await res.json();
+    fileSha = data.sha;
+    const decoded = decodeURIComponent(
+      atob(data.content.replace(/\n/g,''))
+        .split('').map(c => '%' + c.charCodeAt(0).toString(16).padStart(2,'0')).join('')
+    );
+    return JSON.parse(decoded);
+  }
+  if (res.status === 404) { fileSha = null; return []; }
+  throw new Error('HTTP ' + res.status);
+}
+
+async function enviarCadastro() {
+  const nome    = document.getElementById('f-nome').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const celular = document.getElementById('f-celular').value.trim();
+
+  if (!nome)    { toast('Por favor, informe seu nome completo.', 'error'); return; }
+  if (!email)   { toast('Por favor, informe um e-mail válido.', 'error'); return; }
+  if (!celular) { toast('Por favor, informe seu celular.', 'error'); return; }
+  if (!CONFIG.token) { toast('Sistema em configuração. Tente mais tarde.', 'error'); return; }
+
+  document.getElementById('btn-enviar').disabled = true;
+  showLoading();
+
+  try {
+    // Garante que o arquivo existe
+    await ensureFileExists();
+    // Carrega lista atual
+    const alunos = await getFileSha();
+
+    // Verifica e-mail duplicado
+    if (alunos.find(a => a.email.toLowerCase() === email.toLowerCase())) {
+      hideLoading();
+      document.getElementById('btn-enviar').disabled = false;
+      toast('Este e-mail já está cadastrado!', 'error');
+      return;
+    }
+
+    // Adiciona novo aluno
+    alunos.push({
+      id:          'id_' + Date.now(),
+      nome, email, celular,
+      sexo:        document.getElementById('f-sexo').value,
+      instrucao:   document.getElementById('f-instrucao').value,
+      criadoEm:    new Date().toISOString()
+    });
+
+    // Salva no GitHub
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(alunos, null, 2))));
+    const res = await fetch(
+      `https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.file}`,
+      {
+        method: 'PUT',
+        headers: buildHeaders(),
+        body: JSON.stringify({
+          message: 'Novo cadastro: ' + nome,
+          content: content,
+          ...(fileSha ? { sha: fileSha } : {})
+        })
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'HTTP ' + res.status);
+    }
+
+    hideLoading();
+    mostrarSucesso();
+
+  } catch(e) {
+    hideLoading();
+    document.getElementById('btn-enviar').disabled = false;
+    toast('Erro ao salvar: ' + e.message, 'error');
+  }
+}
+
+function mostrarSucesso() {
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('success-screen').classList.add('active');
+
+  let count = 3;
+  const msg = document.getElementById('redirect-msg');
+  const interval = setInterval(() => {
+    count--;
+    msg.textContent = 'Redirecionando em ' + count + ' segundo' + (count !== 1 ? 's' : '') + '…';
+    if (count <= 0) {
+      clearInterval(interval);
+      window.location.href = CONFIG.redirectUrl;
+    }
+  }, 1000);
+}
+
+function maskPhone(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,11);
+  if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+  el.value = v;
+}
+
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'show ' + type;
+  clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 4000);
+}
+
+function showLoading() { document.getElementById('loading').classList.add('active'); }
+function hideLoading() { document.getElementById('loading').classList.remove('active'); }
+</script>
+</body>
+</html>

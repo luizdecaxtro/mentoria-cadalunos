@@ -344,12 +344,12 @@
     <div id="form-section">
       <div class="form-group">
         <label>Nome Completo <span class="req">*</span></label>
-        <input type="text" id="f-nome" placeholder="Seu nome completo" autocomplete="off">
+        <input type="text" id="f-nome" placeholder="Seu nome completo" autocomplete="new-password" name="nome_cadastro" onfocus="this.removeAttribute('readonly')" readonly>
       </div>
 
       <div class="form-group">
         <label>E-mail <span class="req">*</span></label>
-        <input type="email" id="f-email" placeholder="seu@email.com" autocomplete="off">
+        <input type="email" id="f-email" placeholder="seu@email.com" autocomplete="new-password" name="email_cadastro" onfocus="this.removeAttribute('readonly')" readonly>
       </div>
 
       <div class="form-row">
@@ -401,8 +401,13 @@
     <div id="success-screen">
       <div class="success-icon">✓</div>
       <h2>Cadastro realizado!</h2>
-      <p>Seus dados foram registrados com sucesso.<br>Você será redirecionado para o pagamento.</p>
-      <div class="redirect-bar" id="redirect-msg">Redirecionando em 3 segundos…</div>
+      <p>Seus dados foram registrados com sucesso.</p>
+      <div id="codigo-box" style="display:none;margin:18px 0;padding:16px 24px;background:rgba(160,82,30,0.08);border:1.5px solid #d4b896;border-radius:12px;">
+        <p style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a0521e;margin-bottom:6px;">Seu Código de Inscrição</p>
+        <p style="font-family:'Courier New',monospace;font-size:1.5rem;font-weight:700;color:#0e0b08;letter-spacing:0.08em;" id="codigo-gerado">—</p>
+        <p style="font-size:0.78rem;color:#9a7a60;margin-top:6px;">📧 Este código também será enviado para o seu e-mail.<br>Guarde-o — será necessário para a avaliação final.</p>
+      </div>
+      <div class="redirect-bar" id="redirect-msg">Redirecionando para o pagamento em 5 segundos…</div>
     </div>
 
   </div>
@@ -418,12 +423,62 @@
 const CONFIG = {
   repo:        'luizdecaxtro/mentoria-cadalunos',
   file:        'cadalunos.json',
-  redirectUrl: 'https://lojasdecastro.com.br/pagamento-da-mentoria'
+  redirectUrl: 'https://lojasdecastro.com.br/pagamento-da-mentoria',
+  // EmailJS — preencha após criar conta em emailjs.com (gratuito)
+  emailjs_public_key:  'Yx_qgE1YjaUyqSALl',  // << sua Public Key >>
+  emailjs_service_id:  'service_vy9kv3d',  // << seu Service ID >>
+  emailjs_template_id: 'template_g9guk7e',  // << seu Template ID >>
 };
 function getToken() { return localStorage.getItem('_mtoken') || ''; }
 // ─────────────────────────────────────────────────────────
 
 let fileSha = null;
+
+// ── GERAÇÃO DE CÓDIGO DO ALUNO ──────────────────────────
+function gerarCodigo(alunos) {
+  const ano = new Date().getFullYear();
+  // Pega o maior número sequencial já usado neste ano
+  const prefixo = 'MIA-' + ano;
+  let maxSeq = 0;
+  alunos.forEach(a => {
+    if (a.codigo && a.codigo.startsWith(prefixo)) {
+      const seq = parseInt(a.codigo.replace(prefixo, '')) || 0;
+      if (seq > maxSeq) maxSeq = seq;
+    }
+  });
+  const proximo = String(maxSeq + 1).padStart(4, '0');
+  return prefixo + proximo;
+}
+
+// ── ENVIO DE E-MAIL VIA EMAILJS ──────────────────────────
+async function enviarEmailBoasVindas(aluno) {
+  if (!CONFIG.emailjs_public_key || !CONFIG.emailjs_service_id || !CONFIG.emailjs_template_id) {
+    console.log('EmailJS não configurado — e-mail não enviado automaticamente.');
+    return false;
+  }
+  try {
+    if (!window.emailjs) {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+        s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+      emailjs.init(CONFIG.emailjs_public_key);
+    }
+    await emailjs.send(CONFIG.emailjs_service_id, CONFIG.emailjs_template_id, {
+      to_email:  aluno.email,
+      to_name:   aluno.nome,
+      codigo:    aluno.codigo,
+      curso:     'Mentoria das Profissões + Inteligência Artificial',
+      responsavel: 'Luiz Carlos de Castro',
+    });
+    return true;
+  } catch(e) {
+    console.error('Erro EmailJS:', e);
+    return false;
+  }
+}
 
 function buildHeaders() {
   return {
@@ -498,14 +553,19 @@ async function enviarCadastro() {
       return;
     }
 
+    // Gera código único para o aluno
+    const codigo = gerarCodigo(alunos);
+
     // Adiciona novo aluno
-    alunos.push({
-      id:          'id_' + Date.now(),
+    const novoAluno = {
+      id:        'id_' + Date.now(),
+      codigo,
       nome, email, celular,
-      sexo:        document.getElementById('f-sexo').value,
-      instrucao:   document.getElementById('f-instrucao').value,
-      criadoEm:    new Date().toISOString()
-    });
+      sexo:      document.getElementById('f-sexo').value,
+      instrucao: document.getElementById('f-instrucao').value,
+      criadoEm:  new Date().toISOString()
+    };
+    alunos.push(novoAluno);
 
     // Salva no GitHub
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(alunos, null, 2))));
@@ -528,7 +588,11 @@ async function enviarCadastro() {
     }
 
     hideLoading();
-    mostrarSucesso();
+    // Envia e-mail de boas-vindas com o código
+    enviarEmailBoasVindas(novoAluno).then(sent => {
+      if (sent) console.log('E-mail enviado para', novoAluno.email);
+    });
+    mostrarSucesso(novoAluno.codigo);
 
   } catch(e) {
     hideLoading();
@@ -537,9 +601,15 @@ async function enviarCadastro() {
   }
 }
 
-function mostrarSucesso() {
+function mostrarSucesso(codigo) {
   document.getElementById('form-section').style.display = 'none';
   document.getElementById('success-screen').classList.add('active');
+  if (codigo) {
+    const el = document.getElementById('codigo-gerado');
+    if (el) el.textContent = codigo;
+    const box = document.getElementById('codigo-box');
+    if (box) box.style.display = 'block';
+  }
 
   let count = 3;
   const msg = document.getElementById('redirect-msg');
@@ -611,3 +681,4 @@ checkSecretPanel();
 </div>
 </body>
 </html>
+

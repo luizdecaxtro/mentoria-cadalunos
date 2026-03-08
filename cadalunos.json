@@ -10,7 +10,7 @@
   },
   {
     "id": "id_1772911564876",
-    "nome": "João de deus",
+    "nome": "JoÃ£o de deus",
     "email": "intelectus247@gmail.com",
     "celular": "(98) 98887-7554",
     "sexo": "M",
@@ -44,15 +44,5 @@
     "sexo": "M",
     "instrucao": "Superior Incompleto",
     "criadoEm": "2026-03-07T20:43:56.337Z"
-  },
-  {
-    "id": "id_1772932541030",
-    "codigo": "MIA-20260001",
-    "nome": "Jorge",
-    "email": "intelectus2@gmail.com",
-    "celular": "(98) 98885-5447",
-    "sexo": "M",
-    "instrucao": "Pós-Graduação",
-    "criadoEm": "2026-03-08T01:15:41.030Z"
   }
 ]

@@ -1,16 +1,5 @@
 [
   {
-    "id": "id_1773066058451",
-    "codigo": "MIA-20260003",
-    "nome": "Luiz de Castro",
-    "email": "lojasdecastro@gmail.com",
-    "celular": "(98) 98880-4678",
-    "sexo": "M",
-    "instrucao": "Mestrado",
-    "criadoEm": "2026-03-09T14:20:58.451Z",
-    "atualizadoEm": "2026-03-09T14:20:58.451Z"
-  },
-  {
     "id": "id_1773103363563",
     "codigo": "MIA-20260004",
     "nome": "DeCastro",

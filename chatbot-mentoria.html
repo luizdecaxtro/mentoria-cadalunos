@@ -616,9 +616,13 @@ function miaToggle(){
     setTimeout(()=> win.classList.add('open'), 10);
     miaCheckKey();
     if(miaHistory.length === 0 && miaGetKey()) miaWelcome();
+    // Avisa iframe para expandir
+    try { window.parent.postMessage('mia-open', '*'); } catch(e){}
   } else {
     win.classList.remove('open');
     setTimeout(()=> win.style.display = 'none', 250);
+    // Avisa iframe para encolher
+    try { window.parent.postMessage('mia-close', '*'); } catch(e){}
   }
 }
 

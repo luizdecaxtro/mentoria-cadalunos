@@ -87,7 +87,8 @@
 }
 
 /* Iframe mode — body transparente */
-body { background: transparent !important; margin: 0; padding: 0; }
+body { background: transparent !important; margin: 0; padding: 0; pointer-events: none; }
+#mia-chat-btn, #mia-chat-window, #mia-pwd-modal { pointer-events: auto; }
 #mia-chat-window.open {
   display: flex;
   transform: scale(1) translateY(0);
@@ -812,3 +813,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+

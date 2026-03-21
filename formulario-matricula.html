@@ -3,682 +3,2459 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro de Matrícula — Mentoria das Profissões + IA</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>MentorIA Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --black:   #0e0b08;
-    --brown:   #6b3d1e;
-    --brown2:  #8b5230;
-    --caramel: #a0521e;
-    --cream:   #fdf6ee;
-    --parchment: #f5e9d8;
-    --border:  #d4b896;
-    --shadow:  rgba(107,61,30,0.12);
-  }
+:root {
+  --bg: #f5f2eb;
+  --surface: #faf8f4;
+  --surface2: #ede9e0;
+  --border: #ddd8cc;
+  --ink: #1a1814;
+  --ink2: #3d3a34;
+  --muted: #8a8578;
+  --accent: #2d5a3d;
+  --accent-light: #e8f0eb;
+  --accent2: #8b4513;
+  --accent2-light: #f5ebe3;
+  --gold: #c49a2a;
+  --gold-light: #faf3e0;
+  --tag-bg: #e8ede9;
+  --progress: #2d5a3d;
+}
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-  body {
-    font-family: 'Jost', sans-serif;
-    background: var(--cream);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 16px;
-    position: relative;
-    overflow-x: hidden;
-  }
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
 
-  /* Fundo decorativo */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(196,134,74,0.18) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 40% at 90% 90%, rgba(107,61,30,0.08) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
-  }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f5f2eb'/%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23d4cfc4' opacity='0.5'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
 
-  body::after {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236b3d1e' fill-opacity='0.035'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-  }
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+  width: 270px;
+  min-width: 270px;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
 
-  .page-wrap {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 560px;
-    animation: fadeUp 0.6s ease both;
-  }
+.sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,90,61,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
 
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(28px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
+.logo {
+  padding: 28px 22px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
 
-  /* Cabeçalho */
-  .page-header {
-    text-align: center;
-    margin-bottom: 36px;
-  }
+.logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
 
-  .logo-ring {
-    width: 68px; height: 68px;
-    border-radius: 50%;
-    border: 2px solid var(--caramel);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 18px;
-    background: rgba(160,82,30,0.08);
-    box-shadow: 0 0 24px rgba(160,82,30,0.15);
-    font-size: 1.8rem;
-  }
+.logo-gem {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, #2d5a3d, #4a8a5e);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
 
-  .page-header h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.1rem;
-    font-weight: 700;
-    color: var(--black);
-    line-height: 1.15;
-    letter-spacing: 0.01em;
-  }
+.logo-name {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  color: #f5f2eb;
+  letter-spacing: -0.3px;
+}
 
-  .page-header h1 span {
-    color: var(--caramel);
-  }
+.logo-name span { color: #4a8a5e; }
 
-  .page-header p {
-    margin-top: 10px;
-    color: #7a5c44;
-    font-size: 0.88rem;
-    font-weight: 300;
-    letter-spacing: 0.04em;
-  }
+.logo-tagline {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
 
-  .divider {
-    width: 60px; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--caramel), transparent);
-    margin: 14px auto 0;
-  }
+.user-profile {
+  padding: 14px 22px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
 
-  /* Card do formulário */
-  .card {
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 40px 44px;
-    box-shadow: 0 8px 40px var(--shadow), 0 1px 0 rgba(255,255,255,0.8);
-  }
+.user-avatar-box {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d5a3d, #4a8a5e);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  color: white;
+  flex-shrink: 0;
+  border: 2px solid rgba(74,138,94,0.4);
+}
 
-  .form-group {
-    margin-bottom: 22px;
-  }
+.user-info { overflow: hidden; }
 
-  .form-group label {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--caramel);
-    margin-bottom: 8px;
-  }
+.user-name {
+  font-family: 'Fraunces', serif;
+  font-size: 13px;
+  color: #f0ece4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
 
-  .form-group label .req {
-    color: #c0392b;
-    margin-left: 2px;
-  }
+.user-title {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  .form-group input,
-  .form-group select {
-    width: 100%;
-    background: var(--parchment);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 13px 16px;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.95rem;
-    color: var(--black);
-    transition: all 0.2s;
-    appearance: none;
-    -webkit-appearance: none;
-  }
+.nav-label {
+  padding: 20px 22px 8px;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
 
-  .form-group input::placeholder { color: #b09070; }
+.area-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 22px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  width: 100%;
+  text-align: left;
+  transition: all 0.2s;
+  position: relative;
+}
 
-  .form-group input:focus,
-  .form-group select:focus {
-    outline: none;
-    border-color: var(--caramel);
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(160,82,30,0.1);
-  }
+.area-btn:hover { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.04); }
 
-  .form-group select option {
-    background: #fff;
-    color: var(--black);
-  }
+.area-btn.active {
+  color: #f5f2eb;
+  background: rgba(45,90,61,0.25);
+}
 
-  .select-wrap {
-    position: relative;
-  }
+.area-btn.active::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 20%; bottom: 20%;
+  width: 3px;
+  background: #4a8a5e;
+  border-radius: 3px 0 0 3px;
+}
 
-  .select-wrap::after {
-    content: '▾';
-    position: absolute;
-    right: 14px; top: 50%;
-    transform: translateY(-50%);
-    color: var(--caramel);
-    pointer-events: none;
-    font-size: 0.9rem;
-  }
+.area-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
 
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
+.area-progress {
+  margin-left: auto;
+  font-size: 10px;
+  color: rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
 
-  /* Botão */
-  .btn-submit {
-    width: 100%;
-    margin-top: 8px;
-    padding: 15px;
-    background: linear-gradient(135deg, var(--brown), var(--caramel));
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Jost', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 6px 20px rgba(107,61,30,0.4);
-  }
+.area-btn.active .area-progress { color: #4a8a5e; }
 
-  .btn-submit::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, var(--caramel), var(--brown2));
-    opacity: 0;
-    transition: opacity 0.25s;
-  }
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 18px 22px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  .btn-submit:hover::before { opacity: 1; }
-  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(107,61,30,0.5); }
-  .btn-submit:active { transform: translateY(0); }
+.btn-outline {
+  padding: 9px 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: none;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
 
-  .btn-submit span { position: relative; z-index: 1; }
+.btn-outline:hover { border-color: rgba(74,138,94,0.5); color: #4a8a5e; }
 
-  .btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
+/* ═══ MAIN ═══ */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
 
-  /* Nota de privacidade */
-  .privacy-note {
-    text-align: center;
-    margin-top: 18px;
-    font-size: 0.75rem;
-    color: #9a7a60;
-    line-height: 1.5;
-  }
+/* TOP BAR */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  display: flex;
+  align-items: stretch;
+  height: 58px;
+  flex-shrink: 0;
+  gap: 0;
+}
 
-  .privacy-note a { color: var(--caramel); text-decoration: none; }
+.topbar-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
 
-  /* Toast */
-  #toast {
-    position: fixed;
-    bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: #fff;
-    color: var(--black);
-    padding: 13px 24px;
-    border-radius: 10px;
-    font-size: 0.87rem;
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--caramel);
-    box-shadow: 0 8px 28px rgba(107,61,30,0.15);
-    opacity: 0;
-    transition: all 0.3s;
-    z-index: 200;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-  #toast.error { border-left-color: #c0392b; }
-  #toast.success { border-left-color: #4a7c59; }
+.topbar-icon { font-size: 20px; }
 
-  /* Loading */
-  #loading {
-    position: fixed; inset: 0;
-    background: rgba(245,237,227,0.88);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 300;
-    flex-direction: column;
-    gap: 16px;
-  }
-  #loading.active { display:flex; }
-  .spinner {
-    width: 42px; height: 42px;
-    border: 3px solid rgba(196,134,74,0.2);
-    border-top-color: var(--caramel);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to{transform:rotate(360deg)} }
-  #loading p { color: var(--brown); font-size: 0.88rem; letter-spacing: 0.06em; }
+.topbar-title {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  color: var(--ink);
+}
 
-  /* Tela de sucesso */
-  #success-screen {
-    display: none;
-    text-align: center;
-    padding: 20px 0;
-    animation: fadeUp 0.5s ease both;
-  }
-  #success-screen.active { display: block; }
-  .success-icon {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    border: 2px solid #4a7c59;
-    background: rgba(74,124,89,0.1);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    box-shadow: 0 0 30px rgba(74,124,89,0.2);
-  }
-  #success-screen h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.8rem;
-    color: var(--black);
-    margin-bottom: 12px;
-  }
-  #success-screen p { color: #7a5c44; font-size: 0.9rem; line-height: 1.6; }
-  .redirect-bar {
-    margin-top: 24px;
-    background: rgba(196,134,74,0.1);
-    border: 1px solid rgba(196,134,74,0.2);
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 0.82rem;
-    color: var(--caramel);
-  }
+.topbar-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
-  @media(max-width: 520px) {
-    .card { padding: 28px 22px; }
-    .form-row { grid-template-columns: 1fr; }
-    .page-header h1 { font-size: 1.7rem; }
-  }
+.topbar-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.tab-btn {
+  padding: 0 18px;
+  border: none;
+  background: none;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-btn:hover { color: var(--ink2); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ═══ PROGRESS BAR ═══ */
+.progress-bar-wrap {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.progress-label {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.progress-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #4a8a5e);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.progress-steps {
+  display: flex;
+  gap: 6px;
+}
+
+.step-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+
+.step-dot.done { background: var(--accent); }
+.step-dot.current { background: var(--gold); box-shadow: 0 0 6px rgba(196,154,42,0.4); }
+
+/* ═══ PANEL CONTAINER ═══ */
+.panels {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+}
+
+/* CHAT PANEL */
+.chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  scroll-behavior: smooth;
+}
+
+.messages::-webkit-scrollbar { width: 4px; }
+.messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* QUIZ / WELCOME CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 600px;
+  animation: fadeUp 0.4s ease forwards;
+}
+
+.card-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.card h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.card p {
+  font-size: 13.5px;
+  color: var(--ink2);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.quiz-option {
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  color: var(--ink2);
+  background: var(--bg);
+  transition: all 0.2s;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quiz-option:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.quiz-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.option-letter {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.quiz-option.selected .option-letter {
+  background: var(--accent);
+  color: white;
+}
+
+/* TOPIC CARD */
+.topic-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  max-width: 600px;
+  cursor: pointer;
+  transition: all 0.2s;
+  animation: fadeUp 0.4s ease forwards;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topic-card:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(45,90,61,0.08);
+}
+
+.topic-card.locked { opacity: 0.45; cursor: not-allowed; }
+.topic-card.locked:hover { transform: none; border-color: var(--border); box-shadow: none; }
+.topic-card.completed { border-color: rgba(45,90,61,0.3); background: var(--accent-light); }
+
+.topic-num {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.topic-card.completed .topic-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.topic-info { flex: 1; }
+.topic-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.topic-desc { font-size: 12px; color: var(--muted); }
+
+.topic-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.meta-tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--surface2);
+  color: var(--muted);
+}
+
+.topic-arrow { color: var(--muted); font-size: 16px; flex-shrink: 0; }
+.topic-card:hover .topic-arrow { color: var(--accent); }
+
+/* RESOURCE CARD */
+.resource-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 600px;
+  animation: fadeUp 0.4s ease forwards;
+}
+
+.resource-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.resource-item:hover { border-color: var(--accent); background: var(--accent-light); }
+
+.resource-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.resource-icon.book { background: var(--gold-light); }
+.resource-icon.video { background: #fce8e8; }
+.resource-icon.tool { background: #e8eeff; }
+.resource-icon.article { background: var(--accent-light); }
+
+.resource-name { font-size: 12.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.resource-type { font-size: 11px; color: var(--muted); }
+
+/* EXERCISE CARD */
+.exercise-card {
+  background: var(--gold-light);
+  border: 1px solid rgba(196,154,42,0.25);
+  border-radius: 14px;
+  padding: 20px 22px;
+  max-width: 600px;
+  animation: fadeUp 0.4s ease forwards;
+}
+
+.exercise-card .card-tag { background: #fdf0c0; color: var(--gold); }
+.exercise-title { font-family: 'Fraunces', serif; font-size: 17px; color: var(--ink); margin-bottom: 8px; }
+.exercise-body { font-size: 13.5px; color: var(--ink2); line-height: 1.7; margin-bottom: 14px; }
+
+.exercise-textarea {
+  width: 100%;
+  background: white;
+  border: 1px solid rgba(196,154,42,0.3);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  resize: none;
+  min-height: 80px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.exercise-textarea:focus { border-color: var(--gold); }
+
+.btn-primary {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.btn-primary:hover { background: #245030; transform: translateY(-1px); }
+
+/* MSG BUBBLES */
+.msg {
+  display: flex;
+  gap: 10px;
+  max-width: 680px;
+  opacity: 0;
+  animation: fadeUp 0.3s ease forwards;
+}
+
+.msg.user { flex-direction: row-reverse; align-self: flex-end; }
+.msg.ai { align-self: flex-start; }
+
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.avatar.ai-av {
+  background: var(--accent);
+  color: white;
+  font-size: 14px;
+}
+
+.avatar.user-av {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.bubble {
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  max-width: 520px;
+}
+
+.msg.user .bubble {
+  background: var(--ink);
+  color: #f0ece4;
+  border-bottom-right-radius: 4px;
+}
+
+.msg.ai .bubble {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--ink2);
+  border-bottom-left-radius: 4px;
+}
+
+.bubble strong { color: var(--accent); font-weight: 600; }
+.bubble p { margin-bottom: 8px; }
+.bubble p:last-child { margin-bottom: 0; }
+.bubble ul { padding-left: 18px; margin: 6px 0; }
+.bubble li { margin-bottom: 4px; }
+
+/* TYPING */
+.typing-dots { display: flex; gap: 4px; padding: 4px 0; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); animation: blink 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%,80%,100% { opacity: 0.3; transform: scale(0.85); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+/* INPUT */
+.input-area {
+  padding: 14px 28px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.input-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: border-color 0.2s;
+}
+
+.input-wrap:focus-within { border-color: rgba(45,90,61,0.4); }
+
+textarea {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font-family: 'Syne', sans-serif;
+  font-size: 13.5px;
+  resize: none;
+  line-height: 1.5;
+  max-height: 100px;
+  min-height: 22px;
+}
+
+textarea::placeholder { color: var(--muted); }
+
+.send-btn {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.send-btn:hover { background: #245030; transform: scale(1.05); }
+.send-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+/* TRACK PANEL (right side) */
+.track-panel {
+  width: 300px;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.track-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.track-header-title {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.track-header-sub { font-size: 11px; color: var(--muted); }
+
+.track-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.track-list::-webkit-scrollbar { width: 3px; }
+.track-list::-webkit-scrollbar-thumb { background: var(--border); }
+
+.track-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.track-item:hover { background: var(--bg); border-color: var(--border); }
+
+.track-item.active {
+  background: var(--accent-light);
+  border-color: rgba(45,90,61,0.2);
+}
+
+.track-item.done { opacity: 0.6; }
+
+.track-num {
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.track-item.active .track-num { background: var(--accent); color: white; }
+.track-item.done .track-num { background: var(--accent); color: white; font-size: 12px; }
+
+.track-item-title { font-size: 12.5px; color: var(--ink2); flex: 1; line-height: 1.3; }
+.track-item.active .track-item-title { color: var(--accent); font-weight: 600; }
+
+.track-item-status { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* HIDDEN */
+.hidden { display: none !important; }
+
+/* ═══ API KEY MODAL ═══ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,24,20,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeUp 0.3s ease forwards;
+}
+
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 40px;
+  width: 440px;
+  max-width: 90vw;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.15);
+}
+
+.modal-icon {
+  width: 52px; height: 52px;
+  background: var(--accent-light);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.modal-desc {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
+
+.modal-desc a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.modal-desc a:hover { text-decoration: underline; }
+
+.modal-input-wrap {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 12px 42px 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  font-family: 'Syne', sans-serif;
+  font-size: 13.5px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.modal-input:focus { border-color: var(--accent); }
+
+.modal-eye {
+  position: absolute;
+  right: 12px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  cursor: pointer; font-size: 16px;
+  color: var(--muted);
+}
+
+.modal-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-btn:hover { background: #245030; }
+.modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.api-key-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--accent-light);
+  border-radius: 20px;
+  font-size: 11px;
+  color: var(--accent);
+  cursor: pointer;
+  border: none;
+  font-family: 'Syne', sans-serif;
+  transition: all 0.2s;
+}
+
+.api-key-badge:hover { background: #d4ead9; }
+
+/* ═══ LOGIN SCREEN ═══ */
+.login-screen {
+  position: fixed; inset: 0;
+  background: var(--ink);
+  z-index: 2000;
+  display: flex; align-items: center; justify-content: center;
+}
+.login-screen::after {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -60%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(45,90,61,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.login-box {
+  position: relative; z-index: 1;
+  width: 400px; max-width: 90vw;
+  animation: fadeUp 0.5s ease forwards;
+}
+.login-logo { text-align: center; margin-bottom: 36px; }
+.login-gem {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, #2d5a3d, #4a8a5e);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin: 0 auto 16px;
+  box-shadow: 0 8px 32px rgba(45,90,61,0.4);
+}
+.login-title { font-family: 'Fraunces', serif; font-size: 32px; color: #f5f2eb; letter-spacing: -0.5px; }
+.login-title span { color: #4a8a5e; }
+.login-subtitle { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
+.login-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px; padding: 32px;
+}
+.login-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 10px; display: block; }
+.login-input-wrap { position: relative; margin-bottom: 20px; }
+.login-input {
+  width: 100%; padding: 14px 44px 14px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px; color: #f5f2eb;
+  font-family: 'Syne', sans-serif; font-size: 15px;
+  outline: none; transition: border-color 0.2s; letter-spacing: 2px;
+}
+.login-input::placeholder { color: rgba(255,255,255,0.2); letter-spacing: 0; }
+.login-input:focus { border-color: rgba(74,138,94,0.6); }
+.login-eye {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; font-size: 16px;
+  color: rgba(255,255,255,0.3);
+}
+.login-btn {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, #2d5a3d, #4a8a5e);
+  border: none; border-radius: 10px; color: white;
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(45,90,61,0.35);
+}
+.login-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(45,90,61,0.45); }
+.login-error {
+  margin-top: 14px; padding: 10px 14px;
+  background: rgba(220,80,80,0.12); border: 1px solid rgba(220,80,80,0.25);
+  border-radius: 8px; color: #f08080; font-size: 13px; text-align: center; display: none;
+}
+.login-footer { text-align: center; margin-top: 24px; font-size: 11px; color: rgba(255,255,255,0.2); }
+
+/* ═══ EXAM ═══ */
+.exam-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.exam-scroll { flex: 1; overflow-y: auto; padding: 28px; display: flex; flex-direction: column; gap: 0; }
+.exam-scroll::-webkit-scrollbar { width: 4px; }
+.exam-scroll::-webkit-scrollbar-thumb { background: var(--border); }
+
+.exam-header-card {
+  background: linear-gradient(135deg, var(--accent), #4a8a5e);
+  border-radius: 16px; padding: 28px; color: white; margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.exam-header-card::after { content: '📋'; position: absolute; right: 24px; top: 50%; transform: translateY(-50%); font-size: 52px; opacity: 0.15; }
+.exam-header-tag { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.7; margin-bottom: 8px; }
+.exam-header-title { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 6px; }
+.exam-header-sub { font-size: 13px; opacity: 0.75; }
+.exam-stats { display: flex; gap: 10px; margin-top: 16px; }
+.exam-stat { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 14px; font-size: 12px; }
+
+.exam-loading { text-align: center; padding: 60px 24px; }
+.exam-loading-icon { font-size: 40px; margin-bottom: 16px; animation: spin 2s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.exam-loading-text { font-family: 'Fraunces', serif; font-size: 18px; color: var(--ink); margin-bottom: 8px; }
+.exam-loading-sub { font-size: 13px; color: var(--muted); }
+
+.exam-question {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px 22px; margin-bottom: 12px;
+  animation: fadeUp 0.3s ease forwards;
+}
+.exam-q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.exam-q-num {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--accent); color: white; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.exam-q-module { font-size: 10px; color: var(--muted); background: var(--surface2); padding: 3px 8px; border-radius: 10px; }
+.exam-q-text { font-size: 14px; color: var(--ink); line-height: 1.6; margin-bottom: 14px; font-weight: 500; }
+.exam-options { display: flex; flex-direction: column; gap: 7px; }
+.exam-option {
+  padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 9px;
+  cursor: pointer; font-size: 13px; color: var(--ink2); background: var(--bg);
+  transition: all 0.15s; display: flex; align-items: center; gap: 10px; text-align: left;
+}
+.exam-option:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.exam-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.exam-option.correct { border-color: #5cba8c; background: #e8f5ee; color: #2a6b45; }
+.exam-option.wrong { border-color: #e05c5c; background: #fce8e8; color: #a03030; }
+.exam-opt-letter {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0; transition: all 0.15s;
+}
+.exam-option.selected .exam-opt-letter { background: var(--accent); color: white; }
+.exam-option.correct .exam-opt-letter { background: #5cba8c; color: white; }
+.exam-option.wrong .exam-opt-letter { background: #e05c5c; color: white; }
+
+.exam-footer {
+  padding: 16px 28px; border-top: 1px solid var(--border); background: var(--surface);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0;
+}
+.exam-counter { font-size: 13px; color: var(--muted); }
+.exam-counter strong { color: var(--ink); }
+.exam-submit-btn {
+  padding: 11px 28px; background: var(--accent); color: white; border: none;
+  border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.exam-submit-btn:hover { background: #245030; transform: translateY(-1px); }
+.exam-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.exam-result-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px; text-align: center; margin-bottom: 24px;
+}
+.exam-score-ring {
+  width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  font-family: 'Fraunces', serif; border: 6px solid;
+}
+.exam-score-ring.gold { border-color: var(--gold); background: var(--gold-light); color: var(--gold); }
+.exam-score-ring.green { border-color: #5cba8c; background: #e8f5ee; color: #2a6b45; }
+.exam-score-ring.red { border-color: #e05c5c; background: #fce8e8; color: #a03030; }
+.exam-score-pct { font-size: 28px; line-height: 1; }
+.exam-score-label { font-size: 10px; opacity: 0.6; margin-top: 2px; }
+.exam-result-title { font-family: 'Fraunces', serif; font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+.exam-result-sub { font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+.exam-result-stats { display: flex; gap: 12px; justify-content: center; }
+.exam-result-stat { padding: 12px 20px; background: var(--surface2); border-radius: 12px; text-align: center; }
+.exam-result-stat-num { font-family: 'Fraunces', serif; font-size: 22px; color: var(--ink); }
+.exam-result-stat-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.cert-btn {
+  margin-top: 20px; padding: 12px 28px;
+  background: linear-gradient(135deg, var(--gold), #d4aa40);
+  color: white; border: none; border-radius: 10px;
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(196,154,42,0.3);
+}
+.cert-btn:hover { transform: translateY(-1px); }
+.tab-btn.exam-locked { opacity: 0.4; cursor: not-allowed; }
 </style>
 </head>
 <body>
 
-<div class="page-wrap">
-
-  <div class="page-header">
-    <div class="logo-ring">🎓</div>
-    <h1>Mentoria das<br><span>Profissões + IA</span></h1>
-    <p>Preencha seus dados para iniciar a matrícula</p>
-    <div class="divider"></div>
-  </div>
-
-  <div class="card">
-
-    <!-- FORMULÁRIO -->
-    <div id="form-section">
-      <div class="form-group">
-        <label>Nome Completo <span class="req">*</span></label>
-        <input type="text" id="f-nome" placeholder="Seu nome completo" autocomplete="new-password" name="nome_cadastro" onfocus="this.removeAttribute('readonly')" readonly>
-      </div>
-
-      <div class="form-group">
-        <label>E-mail <span class="req">*</span></label>
-        <input type="email" id="f-email" placeholder="seu@email.com" autocomplete="new-password" name="email_cadastro" onfocus="this.removeAttribute('readonly')" readonly>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Celular <span class="req">*</span></label>
-          <input type="tel" id="f-celular" placeholder="(00) 00000-0000" oninput="maskPhone(this)" autocomplete="off">
-        </div>
-        <div class="form-group">
-          <label>Sexo</label>
-          <div class="select-wrap">
-            <select id="f-sexo">
-              <option value="">Selecione</option>
-              <option value="M">Masculino</option>
-              <option value="F">Feminino</option>
-              <option value="O">Prefiro não dizer</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Grau de Instrução</label>
-        <div class="select-wrap">
-          <select id="f-instrucao">
-            <option value="">Selecione</option>
-            <option value="Ensino Fundamental">Ensino Fundamental</option>
-            <option value="Ensino Médio">Ensino Médio</option>
-            <option value="Técnico">Técnico</option>
-            <option value="Superior Incompleto">Superior Incompleto</option>
-            <option value="Superior Completo">Superior Completo</option>
-            <option value="Pós-Graduação">Pós-Graduação / MBA</option>
-            <option value="Mestrado">Mestrado</option>
-            <option value="Doutorado">Doutorado</option>
-          </select>
-        </div>
-      </div>
-
-      <button class="btn-submit" id="btn-enviar" onclick="enviarCadastro()">
-        <span>Continuar para o Pagamento →</span>
-      </button>
-
-      <p class="privacy-note">
-        Seus dados são armazenados com segurança e usados apenas<br>
-        para gestão da sua matrícula na mentoria.
-      </p>
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-gem">✦</div>
+      <div class="login-title">Mentor<span>IA</span></div>
+      <div class="login-subtitle">Mentoria Guiada por Inteligência Artificial</div>
     </div>
-
-    <!-- TELA DE SUCESSO -->
-    <div id="success-screen">
-      <div class="success-icon">✓</div>
-      <h2>Cadastro realizado!</h2>
-      <p>Seus dados foram registrados com sucesso.</p>
-      <div id="codigo-box" style="display:none;margin:18px 0;padding:16px 24px;background:rgba(160,82,30,0.08);border:1.5px solid #d4b896;border-radius:12px;">
-        <p style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a0521e;margin-bottom:6px;">Seu Código de Inscrição</p>
-        <p style="font-family:'Courier New',monospace;font-size:1.5rem;font-weight:700;color:#0e0b08;letter-spacing:0.08em;" id="codigo-gerado">—</p>
-        <p style="font-size:0.78rem;color:#9a7a60;margin-top:6px;">📧 Este código também será enviado para o seu e-mail.<br>Guarde-o — será necessário para a avaliação final.</p>
+    <div class="login-card">
+      <label class="login-label">Senha de acesso</label>
+      <div class="login-input-wrap">
+        <input class="login-input" type="password" id="loginInput" placeholder="Digite sua senha…"
+          onkeydown="if(event.key==='Enter') doLogin()" oninput="document.getElementById('loginError').style.display='none'">
+        <button class="login-eye" onclick="toggleLoginVis()">👁</button>
       </div>
-      <div class="redirect-bar" id="redirect-msg">Redirecionando para o pagamento em 5 segundos…</div>
+      <button class="login-btn" onclick="doLogin()">Entrar no MentorIA →</button>
+      <div class="login-error" id="loginError">Senha incorreta. Tente novamente.</div>
     </div>
-
+    <div class="login-footer">Luiz de Castro · Mestre em Gestão e Adm. de Empresa</div>
   </div>
 </div>
 
-<div id="loading"><div class="spinner"></div><p>Salvando cadastro…</p></div>
-<div id="toast"></div>
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="apiModal">
+  <div class="modal-box">
+    <div class="modal-icon">🔑</div>
+    <div class="modal-title">Conectar ao Mentor IA</div>
+    <div class="modal-desc">
+      Para usar o app localmente, insira sua chave de API da Anthropic.<br><br>
+      Não tem uma chave? Crie gratuitamente em 
+      <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>.
+    </div>
+    <div class="modal-input-wrap">
+      <input class="modal-input" type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." 
+        oninput="validateApiKey()" onkeydown="if(event.key==='Enter') saveApiKey()">
+      <button class="modal-eye" onclick="toggleApiVis()" id="eyeBtn">👁</button>
+    </div>
+    <div class="modal-note">
+      🔒 A chave é salva apenas localmente no seu navegador (localStorage) e nunca enviada a terceiros.
+    </div>
+    <button class="modal-btn" id="modalSaveBtn" onclick="saveApiKey()" disabled>
+      Conectar e Iniciar →
+    </button>
+  </div>
+</div>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <div class="logo-gem">✦</div>
+      <div class="logo-name">Mentor<span>IA</span></div>
+    </div>
+    <div class="logo-tagline">Mentoria Guiada por IA</div>
+  </div>
+
+  <div class="user-profile">
+    <div class="user-avatar-box">LC</div>
+    <div class="user-info">
+      <div class="user-name">Luiz de Castro</div>
+      <div class="user-title">Mestre em Gestão e Adm. de Empresa</div>
+    </div>
+  </div>
+
+  <div class="nav-label">Trilhas</div>
+
+  <button class="area-btn active" onclick="selectArea('carreira', this)">
+    <span class="area-icon">💼</span> Carreira & Profissão
+    <span class="area-progress" id="prog-carreira">0%</span>
+  </button>
+  <button class="area-btn" onclick="selectArea('empreendedorismo', this)">
+    <span class="area-icon">🚀</span> Empreendedorismo
+    <span class="area-progress" id="prog-empreendedorismo">0%</span>
+  </button>
+  <button class="area-btn" onclick="selectArea('lideranca', this)">
+    <span class="area-icon">🎯</span> Liderança
+    <span class="area-progress" id="prog-lideranca">0%</span>
+  </button>
+  <button class="area-btn" onclick="selectArea('desenvolvimento', this)">
+    <span class="area-icon">🌱</span> Desenvolvimento Pessoal
+    <span class="area-progress" id="prog-desenvolvimento">0%</span>
+  </button>
+  <button class="area-btn" onclick="selectArea('tecnologia', this)">
+    <span class="area-icon">💻</span> Tech & Programação
+    <span class="area-progress" id="prog-tecnologia">0%</span>
+  </button>
+  <button class="area-btn" onclick="selectArea('financas', this)">
+    <span class="area-icon">💰</span> Finanças Pessoais
+    <span class="area-progress" id="prog-financas">0%</span>
+  </button>
+
+  <div class="sidebar-bottom">
+    <button class="btn-outline" onclick="resetArea()">↺ Reiniciar Trilha</button>
+    <button class="api-key-badge" onclick="showApiModal()" id="apiStatus">🔴 Sem API Key</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-info">
+      <span class="topbar-icon" id="topIcon">💼</span>
+      <div>
+        <div class="topbar-title" id="topTitle">Carreira & Profissão</div>
+        <div class="topbar-sub" id="topSub">Trilha de 6 módulos</div>
+      </div>
+    </div>
+    <div class="topbar-tabs">
+      <button class="tab-btn active" onclick="switchTab('chat', this)">💬 Mentor</button>
+      <button class="tab-btn" onclick="switchTab('trilha', this)">🗺️ Trilha</button>
+      <button class="tab-btn" onclick="switchTab('recursos', this)">📚 Recursos</button>
+      <button class="tab-btn" id="examTabBtn" onclick="switchTab('exame', this)">📋 Avaliação Final</button>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap">
+    <span class="progress-label" id="progLabel">Diagnóstico</span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progFill" style="width:0%"></div>
+    </div>
+    <div class="progress-steps" id="progSteps"></div>
+  </div>
+
+  <!-- PANELS -->
+  <div class="panels">
+
+    <!-- CHAT TAB -->
+    <div class="chat-panel" id="tabChat">
+      <div class="messages" id="messages"></div>
+      <div class="input-area">
+        <div class="input-wrap">
+          <textarea id="userInput" placeholder="Responda ou faça uma pergunta…" rows="1"
+            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRILHA TAB -->
+    <div class="chat-panel hidden" id="tabTrilha">
+      <div class="messages" id="trilhaContent"></div>
+    </div>
+
+    <!-- RECURSOS TAB -->
+    <div class="chat-panel hidden" id="tabRecursos">
+      <div class="messages" id="recursosContent"></div>
+    </div>
+
+    <!-- EXAME TAB -->
+    <div class="exam-panel hidden" id="tabExame">
+      <div class="exam-scroll" id="examContent"></div>
+      <div class="exam-footer" id="examFooter" style="display:none">
+        <div class="exam-counter">Respondidas: <strong id="examAnsweredCount">0</strong> / <strong id="examTotalCount">50</strong></div>
+        <button class="exam-submit-btn" id="examSubmitBtn" onclick="submitExam()" disabled>Finalizar Avaliação ✓</button>
+      </div>
+    </div>
+
+  </div>
+</main>
 
 <script>
-'use strict';
+// ═══════════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════════
+const APP_PASSWORD = 'carreirasIA';
 
-// ── CONFIGURAÇÃO ─────────────────────────────────────────
-const CONFIG = {
-  repo:        'luizdecaxtro/mentoria-cadalunos',
-  file:        'cadalunos.json',
-  redirectUrl: 'https://lojasdecastro.com.br/pagamento-da-mentoria',
-  // EmailJS — preencha após criar conta em emailjs.com (gratuito)
-  emailjs_public_key:  'Yx_qgE1YjaUyqSALl',  // << sua Public Key >>
-  emailjs_service_id:  'service_vy9kv3d',  // << seu Service ID >>
-  emailjs_template_id: 'template_g9guk7e',  // << seu Template ID >>
+function doLogin() {
+  const val = document.getElementById('loginInput').value;
+  if (val === APP_PASSWORD) {
+    const screen = document.getElementById('loginScreen');
+    screen.style.opacity = '0';
+    screen.style.transition = 'opacity 0.4s ease';
+    setTimeout(() => screen.style.display = 'none', 400);
+  } else {
+    const err = document.getElementById('loginError');
+    err.style.display = 'block';
+    document.getElementById('loginInput').value = '';
+    document.getElementById('loginInput').style.borderColor = 'rgba(220,80,80,0.5)';
+    setTimeout(() => document.getElementById('loginInput').style.borderColor = '', 1200);
+  }
+}
+
+function toggleLoginVis() {
+  const inp = document.getElementById('loginInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const AREAS = {
+  carreira: {
+    title: 'Carreira & Profissão',
+    icon: '💼',
+    sub: 'Trilha de 6 módulos',
+    quiz: [
+      { q: 'Qual é seu principal desafio profissional agora?', opts: ['Estou insatisfeito no meu emprego atual','Quero crescer e ser promovido','Quero mudar de área ou carreira','Estou desempregado ou buscando oportunidades'] },
+      { q: 'Há quanto tempo está na mesma empresa?', opts: ['Menos de 1 ano','Entre 1 e 3 anos','Entre 3 e 7 anos','Mais de 7 anos'] },
+      { q: 'O que mais te impede de avançar?', opts: ['Falta de clareza sobre onde quero chegar','Não sei como me posicionar/fazer networking','Tenho medo de arriscar','Falta de qualificação ou experiência'] }
+    ],
+    topics: [
+      { title: 'Autoconhecimento Profissional', desc: 'Mapeie seus pontos fortes, valores e o que te motiva', time: '~30min', exercise: 'Liste 3 conquistas profissionais das quais se orgulha. O que elas revelam sobre seus talentos?' },
+      { title: 'Clareza de Objetivos', desc: 'Defina onde quer chegar e em quanto tempo', time: '~25min', exercise: 'Escreva como será sua carreira daqui a 3 anos. Seja específico: cargo, empresa, salário, impacto.' },
+      { title: 'Posicionamento e Marca Pessoal', desc: 'Como você é percebido e como quer ser visto', time: '~30min', exercise: 'Qual é a sua proposta de valor única como profissional? Em uma frase, por que deveriam te contratar/promover?' },
+      { title: 'Networking Estratégico', desc: 'Construindo relações que impulsionam sua carreira', time: '~20min', exercise: 'Mapeie 5 pessoas que poderiam influenciar positivamente sua carreira. Como você pode agregar valor a cada uma?' },
+      { title: 'Negociação e Visibilidade', desc: 'Como pedir promoções e reconhecimento', time: '~25min', exercise: 'Prepare um "brag document": liste suas contribuições e resultados dos últimos 6 meses com números.' },
+      { title: 'Plano de Ação', desc: 'Próximos 90 dias concretos', time: '~20min', exercise: 'Defina 3 ações específicas que você vai tomar nas próximas 2 semanas para avançar na sua carreira.' }
+    ],
+    recursos: [
+      { icon: '📗', type: 'book', name: 'O Trabalho dos Seus Sonhos', cat: 'Livro' },
+      { icon: '📗', type: 'book', name: 'Deep Work – Cal Newport', cat: 'Livro' },
+      { icon: '🎬', type: 'video', name: 'Como se Posicionar no LinkedIn', cat: 'Vídeo' },
+      { icon: '🎬', type: 'video', name: 'Negociação Salarial', cat: 'Vídeo' },
+      { icon: '🔧', type: 'tool', name: 'Template: Currículo ATS', cat: 'Ferramenta' },
+      { icon: '🔧', type: 'tool', name: 'Planilha: Mapeamento de Carreira', cat: 'Ferramenta' },
+      { icon: '📄', type: 'article', name: 'Guia: Transição de Carreira', cat: 'Artigo' },
+      { icon: '📄', type: 'article', name: 'Como Construir Marca Pessoal', cat: 'Artigo' }
+    ],
+    systemBase: `Você é um mentor experiente em desenvolvimento de carreira. 
+Seu papel é GUIAR O USUÁRIO PROGRESSIVAMENTE pela trilha de mentoria, um módulo de cada vez.
+Você já tem o diagnóstico inicial do usuário (fornecido no contexto).
+Conduza a mentoria de forma estruturada: apresente o módulo atual, explique seu propósito, faça perguntas reflexivas poderosas, e quando o usuário responder bem, introduza o exercício do módulo.
+Depois que o usuário completar o exercício, dê feedback construtivo e sinalize que está pronto para avançar ao próximo módulo.
+Use linguagem direta, calorosa e motivadora. Fale em português brasileiro.
+NÃO pule etapas. NÃO faça tudo de uma vez. Vá no ritmo do usuário.`
+  },
+
+  empreendedorismo: {
+    title: 'Empreendedorismo',
+    icon: '🚀',
+    sub: 'Trilha de 6 módulos',
+    quiz: [
+      { q: 'Em que estágio está seu negócio?', opts: ['Tenho só uma ideia ainda','Já estou validando com primeiros clientes','Negócio funcionando, quero escalar','Quero abrir um novo negócio'] },
+      { q: 'Qual é seu maior desafio hoje?', opts: ['Validar se minha ideia tem mercado','Conseguir os primeiros clientes/receita','Montar e gerir minha equipe','Captação de investimento ou crescimento'] },
+      { q: 'Você já tem alguma renda com o negócio?', opts: ['Não, ainda não','Sim, mas não é suficiente para me sustentar','Sim, já pago minhas contas','Sim, estou crescendo consistentemente'] }
+    ],
+    topics: [
+      { title: 'Diagnóstico do Negócio', desc: 'Entenda exatamente onde você está', time: '~30min', exercise: 'Descreva seu negócio em 1 parágrafo: qual problema resolve, para quem, e como ganha dinheiro.' },
+      { title: 'Validação de Mercado', desc: 'Descubra se tem demanda real antes de investir', time: '~35min', exercise: 'Liste 5 formas de validar sua ideia sem gastar dinheiro. Qual você pode executar essa semana?' },
+      { title: 'Proposta de Valor', desc: 'Por que o cliente compraria de você e não do concorrente?', time: '~25min', exercise: 'Complete: "Eu ajudo [quem] a [resultado] através de [como], diferente de [alternativas] porque [diferencial]."' },
+      { title: 'Modelo de Negócio', desc: 'Como você gera, entrega e captura valor', time: '~30min', exercise: 'Preencha o Business Model Canvas simplificado: clientes, proposta, canais, receita e custos principais.' },
+      { title: 'Aquisição de Clientes', desc: 'As primeiras vendas e canais de crescimento', time: '~25min', exercise: 'Descreva o processo completo de uma venda: desde onde o cliente te descobre até fechar. Onde trava?' },
+      { title: 'Planejamento Financeiro', desc: 'Runway, métricas e sustentabilidade', time: '~25min', exercise: 'Calcule: quanto você precisa faturar por mês para ser sustentável? Quantas vendas são isso?' }
+    ],
+    recursos: [
+      { icon: '📗', type: 'book', name: 'A Startup Enxuta – Eric Ries', cat: 'Livro' },
+      { icon: '📗', type: 'book', name: 'Tração – Gabriel Weinberg', cat: 'Livro' },
+      { icon: '🎬', type: 'video', name: 'Como Validar Sua Ideia', cat: 'Vídeo' },
+      { icon: '🎬', type: 'video', name: 'Pitch para Investidores', cat: 'Vídeo' },
+      { icon: '🔧', type: 'tool', name: 'Canvas: Modelo de Negócio', cat: 'Ferramenta' },
+      { icon: '🔧', type: 'tool', name: 'Planilha: Projeção Financeira', cat: 'Ferramenta' },
+      { icon: '📄', type: 'article', name: 'Guia: Primeiros Clientes', cat: 'Artigo' },
+      { icon: '📄', type: 'article', name: 'Como Precificar Serviços', cat: 'Artigo' }
+    ],
+    systemBase: `Você é um mentor de empreendedorismo com experiência prática em startups e negócios.
+Guie o usuário progressivamente pela trilha de empreendedorismo, módulo por módulo.
+Use o diagnóstico inicial para personalizar cada etapa. Faça perguntas que revelem clareza e lacunas.
+Quando o usuário completar um exercício, dê feedback específico e avance ao próximo módulo.
+Seja prático, direto e honesto — inclusive sobre riscos. Fale em português brasileiro.`
+  },
+
+  lideranca: {
+    title: 'Liderança',
+    icon: '🎯',
+    sub: 'Trilha de 6 módulos',
+    quiz: [
+      { q: 'Qual é seu papel de liderança atual?', opts: ['Ainda não lidero formalmente','Líder de uma equipe pequena (até 5 pessoas)','Gestor intermediário (gestores sob mim)','Liderança sênior / executiva'] },
+      { q: 'Qual é seu maior desafio como líder?', opts: ['Dar feedback difícil e ter conversas duras','Engajar e motivar minha equipe','Delegar sem perder qualidade','Influenciar sem autoridade formal'] },
+      { q: 'Como você aprendeu a liderar?', opts: ['Fui jogado na situação sem preparo','Tive bons exemplos para seguir','Busquei cursos e livros ativamente','Ainda estou aprendendo como começar'] }
+    ],
+    topics: [
+      { title: 'Perfil de Liderança', desc: 'Entenda seu estilo e pontos cegos', time: '~25min', exercise: 'Pergunte a 3 pessoas da sua equipe: "O que eu poderia fazer diferente para te apoiar melhor?" Anote as respostas.' },
+      { title: 'Feedback e Comunicação', desc: 'A habilidade mais transformadora de um líder', time: '~30min', exercise: 'Escolha alguém que precisa receber um feedback difícil. Escreva o que diria usando o modelo SBI (Situação, Comportamento, Impacto).' },
+      { title: 'Delegação Eficaz', desc: 'Multiplicar sua capacidade através dos outros', time: '~25min', exercise: 'Liste todas as suas tarefas da última semana. Marque quais poderiam ser feitas por outra pessoa. Por que não delegou?' },
+      { title: 'Engajamento de Equipe', desc: 'Criar um time motivado e de alta performance', time: '~30min', exercise: 'Mapeie cada membro da equipe: o que os motiva individualmente? O que os frustra? O que você pode ajustar?' },
+      { title: 'Tomada de Decisão', desc: 'Decidir com clareza sob incerteza e pressão', time: '~25min', exercise: 'Pense em uma decisão difícil que está adiando. Aplique o framework: qual o pior caso? Qual o custo de não decidir?' },
+      { title: 'Desenvolvimento da Equipe', desc: 'Fazer as pessoas crescerem é seu legado', time: '~25min', exercise: 'Para cada membro da equipe, defina: onde eles podem estar em 12 meses? O que você fará para ajudá-los a chegar lá?' }
+    ],
+    recursos: [
+      { icon: '📗', type: 'book', name: 'Liderança Radical – Kim Scott', cat: 'Livro' },
+      { icon: '📗', type: 'book', name: 'O Monge e o Executivo', cat: 'Livro' },
+      { icon: '🎬', type: 'video', name: 'Como Dar Feedback Difícil', cat: 'Vídeo' },
+      { icon: '🎬', type: 'video', name: 'Delegação sem Microgestão', cat: 'Vídeo' },
+      { icon: '🔧', type: 'tool', name: 'Template: 1-on-1 Semanal', cat: 'Ferramenta' },
+      { icon: '🔧', type: 'tool', name: 'Matriz: Engajamento da Equipe', cat: 'Ferramenta' },
+      { icon: '📄', type: 'article', name: 'Os 5 Disfuncionamentos de uma Equipe', cat: 'Artigo' },
+      { icon: '📄', type: 'article', name: 'Como Construir Confiança como Líder', cat: 'Artigo' }
+    ],
+    systemBase: `Você é um coach executivo e mentor de liderança com vasta experiência prática.
+Guie o usuário módulo por módulo pela trilha de liderança. Use o diagnóstico para personalizar.
+Faça perguntas que levem o usuário a reflexões profundas sobre seu comportamento e impacto.
+Dê ferramentas concretas: frameworks, roteiros, modelos mentais. Fale em português brasileiro.`
+  },
+
+  desenvolvimento: {
+    title: 'Desenvolvimento Pessoal',
+    icon: '🌱',
+    sub: 'Trilha de 6 módulos',
+    quiz: [
+      { q: 'O que mais te trava na vida hoje?', opts: ['Procrastinação e falta de foco','Medo e insegurança','Não sei o que quero para minha vida','Tenho objetivos mas não avanço'] },
+      { q: 'Qual área da sua vida precisa de mais atenção?', opts: ['Carreira e propósito','Relacionamentos e vida social','Saúde e bem-estar','Finanças e segurança'] },
+      { q: 'Como você se relaciona com hábitos?', opts: ['Começo muita coisa e não termino','Sou consistente mas não evoluo','Tenho dificuldade de criar rotinas','Quero reformular completamente minha rotina'] }
+    ],
+    topics: [
+      { title: 'Autoconhecimento Profundo', desc: 'Quem você é, o que te move e seus padrões', time: '~30min', exercise: 'Escreva sobre um momento de pico na sua vida — quando você se sentiu mais vivo e completo. O que estava presente nele?' },
+      { title: 'Valores e Propósito', desc: 'A bússola que orienta todas as decisões', time: '~25min', exercise: 'Liste seus 10 valores mais importantes. Agora escolha os 3 que são inegociáveis. Como suas ações atuais refletem esses valores?' },
+      { title: 'Crenças e Bloqueios', desc: 'Identificar o que sabota seu progresso', time: '~30min', exercise: 'Complete: "Eu não posso [objetivo] porque..." Escreva 5 respostas. Para cada uma, questione: isso é um fato ou uma história que conto para mim mesmo?' },
+      { title: 'Design de Hábitos', desc: 'Criar rotinas que sustentam sua melhor versão', time: '~25min', exercise: 'Escolha 1 hábito que transformaria sua vida. Desenhe: gatilho, rotina e recompensa. Torne-o absurdamente pequeno para começar.' },
+      { title: 'Foco e Produtividade', desc: 'Fazer o que importa sem se perder no urgente', time: '~25min', exercise: 'Quais são as 3 atividades que, se feitas consistentemente, trariam os maiores resultados na sua vida? Elas estão na sua agenda?' },
+      { title: 'Plano de Vida', desc: 'Integrando tudo em uma visão coerente', time: '~30min', exercise: 'Escreva uma carta para você mesmo, datada daqui a 1 ano. Descreva quem você se tornou e o que conquistou.' }
+    ],
+    recursos: [
+      { icon: '📗', type: 'book', name: 'O Poder do Hábito – Charles Duhigg', cat: 'Livro' },
+      { icon: '📗', type: 'book', name: 'Mindset – Carol Dweck', cat: 'Livro' },
+      { icon: '🎬', type: 'video', name: 'Como Identificar Crenças Limitantes', cat: 'Vídeo' },
+      { icon: '🎬', type: 'video', name: 'Técnica Pomodoro e Foco Profundo', cat: 'Vídeo' },
+      { icon: '🔧', type: 'tool', name: 'Template: Roda da Vida', cat: 'Ferramenta' },
+      { icon: '🔧', type: 'tool', name: 'Planner: Design de Hábitos', cat: 'Ferramenta' },
+      { icon: '📄', type: 'article', name: 'Como Descobrir Seus Valores', cat: 'Artigo' },
+      { icon: '📄', type: 'article', name: 'Procrastinação: Causas e Soluções', cat: 'Artigo' }
+    ],
+    systemBase: `Você é um mentor de desenvolvimento pessoal com abordagem profunda e empática.
+Guie o usuário módulo por módulo pela trilha de autoconhecimento e desenvolvimento.
+Use o diagnóstico para personalizar profundamente. Faça perguntas poderosas e reflexivas.
+Quando o usuário compartilhar algo vulnerável, acolha com empatia antes de avançar.
+Seu objetivo é criar momentos de insight genuíno, não apenas transmitir informação. Fale em português brasileiro.`
+  },
+
+  tecnologia: {
+    title: 'Tech & Programação',
+    icon: '💻',
+    sub: 'Trilha de 6 módulos',
+    quiz: [
+      { q: 'Qual é seu nível atual em tech?', opts: ['Completo iniciante, nunca programei','Sei o básico mas não consigo trabalhar com isso','Já trabalho na área, quero crescer','Dev sênior buscando transição ou liderança'] },
+      { q: 'Qual é seu objetivo principal?', opts: ['Conseguir meu primeiro emprego em tech','Ser promovido de Jr para Pleno/Sênior','Mudar de especialidade dentro do tech','Virar tech lead ou gestor de engenharia'] },
+      { q: 'Quanto tempo por dia você tem para estudar?', opts: ['Menos de 1 hora','Entre 1 e 2 horas','Entre 2 e 4 horas','Mais de 4 horas — é meu foco principal'] }
+    ],
+    topics: [
+      { title: 'Diagnóstico Técnico', desc: 'Mapeie onde você está e para onde quer ir', time: '~25min', exercise: 'Liste suas habilidades técnicas de 1 a 5. Identifique quais você precisa desenvolver para atingir seu objetivo.' },
+      { title: 'Trilha de Aprendizado', desc: 'O caminho mais eficiente para seu objetivo', time: '~30min', exercise: 'Pesquise 3 vagas do cargo que você quer. Liste as tecnologias e habilidades exigidas. O que está faltando no seu perfil?' },
+      { title: 'Portfólio e Projetos', desc: 'Como se destacar no mercado com projetos reais', time: '~30min', exercise: 'Pense em 3 problemas do dia a dia que você poderia resolver com código. Escolha um e descreva como seria a solução.' },
+      { title: 'LinkedIn e Networking Tech', desc: 'Visibilidade na comunidade tech', time: '~20min', exercise: 'Otimize seu LinkedIn para tech: headline com sua especialidade, about contando sua história, projetos na seção destaque.' },
+      { title: 'Processo Seletivo Tech', desc: 'Como se preparar para entrevistas e desafios', time: '~30min', exercise: 'Pratique explicar um projeto seu como se fosse para um recrutador técnico: tecnologias, decisões de design, desafios e resultados.' },
+      { title: 'Crescimento e Especialização', desc: 'De Jr a Sênior: o que realmente muda', time: '~25min', exercise: 'O que um dev sênior faz diferente de um jr? Liste 5 diferenças. Em qual delas você mais precisa evoluir?' }
+    ],
+    recursos: [
+      { icon: '📗', type: 'book', name: 'The Pragmatic Programmer', cat: 'Livro' },
+      { icon: '📗', type: 'book', name: 'Clean Code – Robert Martin', cat: 'Livro' },
+      { icon: '🎬', type: 'video', name: 'Roadmap para Dev Frontend 2024', cat: 'Vídeo' },
+      { icon: '🎬', type: 'video', name: 'Como Passar em Entrevistas Tech', cat: 'Vídeo' },
+      { icon: '🔧', type: 'tool', name: 'roadmap.sh – Trilhas de Dev', cat: 'Ferramenta' },
+      { icon: '🔧', type: 'tool', name: 'Template: Portfólio Github', cat: 'Ferramenta' },
+      { icon: '📄', type: 'article', name: 'Como Conseguir o Primeiro Emprego Tech', cat: 'Artigo' },
+      { icon: '📄', type: 'article', name: 'Soft Skills que Todo Dev Precisa', cat: 'Artigo' }
+    ],
+    systemBase: `Você é um mentor de carreira em tecnologia, ex-dev sênior e tech lead.
+Guie o usuário progressivamente pela trilha de desenvolvimento tech, módulo por módulo.
+Baseie-se no diagnóstico para personalizar o nível de profundidade e as recomendações.
+Seja técnico quando necessário mas sempre acessível. Dê exemplos concretos e caminhos claros.
+Encoraje a prática desde o início — aprender tech é 70% fazer e 30% estudar. Fale em português brasileiro.`
+  },
+
+  financas: {
+    title: 'Finanças Pessoais',
+    icon: '💰',
+    sub: 'Trilha de 6 módulos',
+    quiz: [
+      { q: 'Como está sua situação financeira hoje?', opts: ['Estou com dívidas que me preocupam','Pago as contas mas não sobra nada','Sobra um pouco mas não invisto','Já invisto e quero otimizar'] },
+      { q: 'Você tem reserva de emergência?', opts: ['Não tenho nada guardado','Tenho menos de 3 meses de despesas','Tenho entre 3 e 6 meses guardados','Sim, tenho mais de 6 meses'] },
+      { q: 'Qual é seu principal objetivo financeiro?', opts: ['Sair das dívidas','Criar uma reserva de emergência','Começar a investir','Conquistar independência financeira'] }
+    ],
+    topics: [
+      { title: 'Diagnóstico Financeiro', desc: 'Uma visão honesta de onde você está', time: '~25min', exercise: 'Anote todas as suas fontes de renda e todas as despesas do último mês. Separe em: fixas, variáveis e dívidas.' },
+      { title: 'Controle e Orçamento', desc: 'Fazer seu dinheiro trabalhar por você', time: '~25min', exercise: 'Aplique a regra 50-30-20: necessidades, desejos e investimentos. O que precisa mudar no seu orçamento atual?' },
+      { title: 'Quitação de Dívidas', desc: 'Estratégias para se livrar do que pesa', time: '~25min', exercise: 'Liste todas as suas dívidas: valor, juros e prazo. Qual estratégia faz mais sentido — avalanche (maior juro) ou bola de neve (menor valor)?' },
+      { title: 'Reserva de Emergência', desc: 'A base de tudo: segurança primeiro', time: '~20min', exercise: 'Calcule: qual o valor ideal da sua reserva? Quanto você consegue guardar por mês? Em quantos meses você atingiria esse objetivo?' },
+      { title: 'Primeiros Investimentos', desc: 'Fazer seu dinheiro trabalhar enquanto você dorme', time: '~30min', exercise: 'Pesquise 3 opções de renda fixa (Tesouro Selic, CDB, LCI/LCA). Qual se encaixa melhor no seu perfil e prazo?' },
+      { title: 'Planejamento de Longo Prazo', desc: 'Independência financeira — como chegar lá', time: '~30min', exercise: 'Calcule o seu "número de independência financeira": quanto você precisa acumular para viver de renda? Qual o prazo para chegar lá investindo X por mês?' }
+    ],
+    recursos: [
+      { icon: '📗', type: 'book', name: 'Pai Rico, Pai Pobre', cat: 'Livro' },
+      { icon: '📗', type: 'book', name: 'O Homem Mais Rico da Babilônia', cat: 'Livro' },
+      { icon: '🎬', type: 'video', name: 'Como Sair das Dívidas', cat: 'Vídeo' },
+      { icon: '🎬', type: 'video', name: 'Tesouro Direto para Iniciantes', cat: 'Vídeo' },
+      { icon: '🔧', type: 'tool', name: 'Planilha de Orçamento Mensal', cat: 'Ferramenta' },
+      { icon: '🔧', type: 'tool', name: 'Calculadora: Independência Financeira', cat: 'Ferramenta' },
+      { icon: '📄', type: 'article', name: 'Renda Fixa: Guia Completo', cat: 'Artigo' },
+      { icon: '📄', type: 'article', name: 'Método FIRE: Como Funciona', cat: 'Artigo' }
+    ],
+    systemBase: `Você é um educador financeiro com foco em finanças pessoais e educação de investidores iniciantes.
+Guie o usuário módulo por módulo pela trilha financeira, usando o diagnóstico para personalizar.
+Seja claro, prático e nunca assustador — finanças devem empoderar, não paralisar.
+Importante: não faça recomendações específicas de investimentos, trabalhe com conceitos e estratégias.
+Celebre cada conquista — sair das dívidas ou guardar R$100 é um progresso real. Fale em português brasileiro.`
+  }
 };
-function getToken() { return localStorage.getItem('_mtoken') || ''; }
-// ─────────────────────────────────────────────────────────
 
-let fileSha = null;
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let state = {
+  area: 'carreira',
+  phase: 'quiz',       // quiz | topic-intro | exercise | free
+  quizStep: 0,
+  quizAnswers: [],
+  topicIndex: 0,
+  history: [],
+  loading: false,
+  progress: {}          // area -> { done: [], quizDone: bool }
+};
 
-// ── GERAÇÃO DE CÓDIGO DO ALUNO ──────────────────────────
-function gerarCodigo(alunos) {
-  const ano = new Date().getFullYear();
-  // Pega o maior número sequencial já usado neste ano
-  const prefixo = 'MIA-' + ano;
-  let maxSeq = 0;
-  alunos.forEach(a => {
-    if (a.codigo && a.codigo.startsWith(prefixo)) {
-      const seq = parseInt(a.codigo.replace(prefixo, '')) || 0;
-      if (seq > maxSeq) maxSeq = seq;
+// Init progress
+Object.keys(AREAS).forEach(k => { state.progress[k] = { done: [], quizDone: false }; });
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+window.onload = () => {
+  checkApiKey();
+  renderProgressSteps();
+  startQuiz();
+  renderTrilhaTab();
+  renderRecursosTab();
+  updateExamTabState();
+};
+
+// ═══════════════════════════════════════════════
+// AREA SWITCH
+// ═══════════════════════════════════════════════
+function selectArea(area, btn) {
+  document.querySelectorAll('.area-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  state.area = area;
+  state.history = [];
+  state.loading = false;
+
+  const p = state.progress[area];
+  if (p.quizDone) {
+    state.phase = 'free';
+    state.topicIndex = p.done.length;
+  } else {
+    state.phase = 'quiz';
+    state.quizStep = 0;
+    state.quizAnswers = [];
+  }
+
+  const a = AREAS[area];
+  document.getElementById('topIcon').textContent = a.icon;
+  document.getElementById('topTitle').textContent = a.title;
+  document.getElementById('topSub').textContent = a.sub;
+
+  updateProgressBar();
+  renderProgressSteps();
+  clearMessages();
+  renderTrilhaTab();
+  renderRecursosTab();
+  examState = { questions: [], answers: {}, submitted: false, loading: false };
+  document.getElementById('examContent').innerHTML = '';
+  document.getElementById('examFooter').style.display = 'none';
+  updateExamTabState();
+
+  if (p.quizDone) {
+    startCurrentTopic();
+  } else {
+    startQuiz();
+  }
+}
+
+function resetArea() {
+  state.progress[state.area] = { done: [], quizDone: false };
+  state.phase = 'quiz';
+  state.quizStep = 0;
+  state.quizAnswers = [];
+  state.topicIndex = 0;
+  state.history = [];
+  updateProgressBar();
+  renderProgressSteps();
+  clearMessages();
+  renderTrilhaTab();
+  document.getElementById(`prog-${state.area}`).textContent = '0%';
+  startQuiz();
+}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function switchTab(tab, btn) {
+  // Block exam if not all modules done
+  if (tab === 'exame') {
+    const area = AREAS[state.area];
+    const done = state.progress[state.area].done.length;
+    if (done < area.topics.length) {
+      alert(`Complete todos os ${area.topics.length} módulos da trilha para desbloquear a Avaliação Final! (${done}/${area.topics.length} concluídos)`);
+      return;
     }
+    renderExamTab();
+  }
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tabChat').classList.toggle('hidden', tab !== 'chat');
+  document.getElementById('tabTrilha').classList.toggle('hidden', tab !== 'trilha');
+  document.getElementById('tabRecursos').classList.toggle('hidden', tab !== 'recursos');
+  document.getElementById('tabExame').classList.toggle('hidden', tab !== 'exame');
+  updateExamTabState();
+}
+
+function updateExamTabState() {
+  const area = AREAS[state.area];
+  const done = state.progress[state.area].done.length;
+  const btn = document.getElementById('examTabBtn');
+  if (!btn) return;
+  if (done < area.topics.length) {
+    btn.classList.add('exam-locked');
+    btn.title = `Conclua os ${area.topics.length} módulos para desbloquear`;
+  } else {
+    btn.classList.remove('exam-locked');
+    btn.title = '';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════
+function updateProgressBar() {
+  const area = AREAS[state.area];
+  const done = state.progress[state.area].done.length;
+  const total = area.topics.length;
+  const pct = state.progress[state.area].quizDone ? Math.round(((done + 1) / (total + 1)) * 100) : 0;
+  document.getElementById('progFill').style.width = pct + '%';
+  const labels = ['Diagnóstico', ...area.topics.map((t, i) => `Módulo ${i+1}`)];
+  const idx = state.progress[state.area].quizDone ? done + 1 : 0;
+  document.getElementById('progLabel').textContent = labels[Math.min(idx, labels.length - 1)];
+  document.getElementById(`prog-${state.area}`).textContent = pct + '%';
+}
+
+function renderProgressSteps() {
+  const area = AREAS[state.area];
+  const done = state.progress[state.area].done.length;
+  const quizDone = state.progress[state.area].quizDone;
+  const total = area.topics.length + 1;
+  const steps = document.getElementById('progSteps');
+  steps.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot';
+    if (i === 0) {
+      if (quizDone) d.classList.add('done');
+      else d.classList.add('current');
+    } else {
+      const ti = i - 1;
+      if (done > ti) d.classList.add('done');
+      else if (done === ti && quizDone) d.classList.add('current');
+    }
+    steps.appendChild(d);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// MESSAGES HELPERS
+// ═══════════════════════════════════════════════
+function clearMessages() {
+  document.getElementById('messages').innerHTML = '';
+}
+
+function appendCard(html, id = null) {
+  const msgs = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  if (id) wrap.id = id;
+  wrap.innerHTML = html;
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addMsg(role, text) {
+  const msgs = document.getElementById('messages');
+  const d = document.createElement('div');
+  d.className = `msg ${role}`;
+  d.innerHTML = `
+    <div class="avatar ${role === 'ai' ? 'ai-av' : 'user-av'}">${role === 'ai' ? '✦' : '👤'}</div>
+    <div class="bubble">${fmt(text)}</div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('messages');
+  const d = document.createElement('div');
+  d.className = 'msg ai';
+  d.id = 'typing';
+  d.innerHTML = `<div class="avatar ai-av">✦</div><div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+function fmt(text) {
+  if (!text) return '';
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/^/, '<p>').replace(/$/, '</p>')
+    .replace(/<p><\/p>/g, '');
+}
+
+// ═══════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════
+function startQuiz() {
+  const area = AREAS[state.area];
+  appendCard(`
+    <div class="card" style="animation-delay:0.1s">
+      <div class="card-tag">✦ Diagnóstico Inicial</div>
+      <h2>Antes de começar, vamos te conhecer</h2>
+      <p>Responda ${area.quiz.length} perguntas rápidas para que o mentor personalize toda a trilha para você. Leva menos de 2 minutos.</p>
+    </div>`);
+  setTimeout(() => renderQuizQuestion(), 400);
+}
+
+function renderQuizQuestion() {
+  const area = AREAS[state.area];
+  const q = area.quiz[state.quizStep];
+  const letters = ['A','B','C','D'];
+  const opts = q.opts.map((o, i) => `
+    <button class="quiz-option" onclick="selectQuizOption(this, ${i})">
+      <div class="option-letter">${letters[i]}</div>
+      ${o}
+    </button>`).join('');
+
+  appendCard(`
+    <div class="card" style="animation-delay:0.1s">
+      <div class="card-tag">Pergunta ${state.quizStep + 1} de ${area.quiz.length}</div>
+      <h2>${q.q}</h2>
+      <div class="quiz-options">${opts}</div>
+    </div>`);
+}
+
+function selectQuizOption(btn, idx) {
+  btn.closest('.quiz-options').querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const area = AREAS[state.area];
+  state.quizAnswers.push({ q: area.quiz[state.quizStep].q, a: area.quiz[state.quizStep].opts[idx] });
+
+  setTimeout(() => {
+    state.quizStep++;
+    if (state.quizStep < area.quiz.length) {
+      renderQuizQuestion();
+    } else {
+      finishQuiz();
+    }
+  }, 350);
+}
+
+async function finishQuiz() {
+  state.progress[state.area].quizDone = true;
+  updateProgressBar();
+  renderProgressSteps();
+  renderTrilhaTab();
+
+  appendCard(`
+    <div class="card" style="border-color:rgba(45,90,61,0.3);background:var(--accent-light)">
+      <div class="card-tag" style="background:#d4ead9">✓ Diagnóstico completo</div>
+      <h2>Perfeito! Seu diagnóstico está pronto</h2>
+      <p>Analisei suas respostas. Agora vou guiar você pela trilha personalizada, um módulo de cada vez. Vamos começar!</p>
+    </div>`);
+
+  await delay(600);
+  state.phase = 'topic-intro';
+  state.topicIndex = 0;
+  startCurrentTopic();
+}
+
+// ═══════════════════════════════════════════════
+// TOPIC FLOW
+// ═══════════════════════════════════════════════
+async function startCurrentTopic() {
+  const area = AREAS[state.area];
+  if (state.topicIndex >= area.topics.length) {
+    showCompletion();
+    return;
+  }
+
+  const topic = area.topics[state.topicIndex];
+  const diagnosisSummary = state.quizAnswers.map(qa => `- ${qa.q}: ${qa.a}`).join('\n');
+
+  const systemPrompt = area.systemBase + `\n\nDiagnóstico do usuário:\n${diagnosisSummary}\n\nMódulo atual: ${state.topicIndex + 1} — "${topic.title}"\nDescrição: ${topic.desc}`;
+
+  const introPrompt = `Apresente o Módulo ${state.topicIndex + 1}: "${topic.title}". 
+Faça uma introdução envolvente (2-3 parágrafos curtos) explicando por que esse módulo importa para o perfil específico deste usuário baseado no diagnóstico.
+Termine com 1-2 perguntas reflexivas abertas para iniciar a conversa sobre o tema.`;
+
+  state.history = [];
+  showTyping();
+  const reply = await callClaude(systemPrompt, introPrompt);
+  removeTyping();
+  addMsg('ai', reply);
+  state.history.push({ role: 'user', content: introPrompt });
+  state.history.push({ role: 'assistant', content: reply });
+  state.phase = 'free';
+}
+
+async function triggerExercise() {
+  const area = AREAS[state.area];
+  const topic = area.topics[state.topicIndex];
+  const diagnosisSummary = state.quizAnswers.map(qa => `- ${qa.q}: ${qa.a}`).join('\n');
+  const systemPrompt = area.systemBase + `\n\nDiagnóstico:\n${diagnosisSummary}\n\nMódulo atual: ${state.topicIndex + 1} — "${topic.title}"`;
+
+  appendCard(`
+    <div class="exercise-card">
+      <div class="card-tag">✏️ Exercício do Módulo ${state.topicIndex + 1}</div>
+      <div class="exercise-title">${topic.title}</div>
+      <div class="exercise-body">${topic.exercise}</div>
+      <textarea class="exercise-textarea" id="exerciseInput" placeholder="Escreva sua resposta aqui…" rows="3"></textarea>
+      <br><button class="btn-primary" onclick="submitExercise()">Enviar reflexão ➤</button>
+    </div>`);
+}
+
+async function submitExercise() {
+  const val = document.getElementById('exerciseInput')?.value?.trim();
+  if (!val) return;
+  document.querySelector('.exercise-card .btn-primary').disabled = true;
+  addMsg('user', val);
+
+  const area = AREAS[state.area];
+  const topic = area.topics[state.topicIndex];
+  const diagnosisSummary = state.quizAnswers.map(qa => `- ${qa.q}: ${qa.a}`).join('\n');
+  const systemPrompt = area.systemBase + `\n\nDiagnóstico:\n${diagnosisSummary}\n\nMódulo atual: ${state.topicIndex + 1} — "${topic.title}"`;
+
+  const feedbackPrompt = `O usuário completou o exercício do módulo "${topic.title}". Resposta dele: "${val}"
+  
+Dê um feedback construtivo e personalizado (2-3 parágrafos). Reconheça o esforço, aprofunde os insights que ele trouxe, e acrescente 1-2 perspectivas adicionais.
+Ao final, sinalize que está pronto para avançar ao próximo módulo e pergunte se ele quer continuar.`;
+
+  state.history.push({ role: 'user', content: val });
+  showTyping();
+  const reply = await callClaude(systemPrompt, null, state.history.concat([{ role: 'user', content: feedbackPrompt }]));
+  removeTyping();
+  addMsg('ai', reply);
+  state.history.push({ role: 'assistant', content: reply });
+
+  state.progress[state.area].done.push(state.topicIndex);
+  updateProgressBar();
+  renderProgressSteps();
+  renderTrilhaTab();
+
+  appendCard(`
+    <div class="card" style="border-color:rgba(45,90,61,0.3);background:var(--accent-light);max-width:400px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:22px">🎉</span>
+        <div>
+          <div style="font-family:'Fraunces',serif;font-size:15px;color:var(--accent)">Módulo ${state.topicIndex + 1} concluído!</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${area.topics.length - state.topicIndex - 1} módulos restantes</div>
+        </div>
+        ${state.topicIndex + 1 < area.topics.length ? `<button class="btn-primary" style="margin:0;margin-left:auto" onclick="advanceToNextTopic()">Próximo módulo →</button>` : `<button class="btn-primary" style="margin:0;margin-left:auto" onclick="advanceToNextTopic()">Finalizar trilha 🏆</button>`}
+      </div>
+    </div>`);
+}
+
+function advanceToNextTopic() {
+  state.topicIndex++;
+  document.getElementById('messages').scrollTop = 9999;
+  clearMessages();
+  startCurrentTopic();
+}
+
+function showCompletion() {
+  const area = AREAS[state.area];
+  updateExamTabState();
+  appendCard(`
+    <div class="card" style="border-color:rgba(196,154,42,0.4);background:var(--gold-light);text-align:center">
+      <div style="font-size:48px;margin-bottom:16px">🏆</div>
+      <div class="card-tag" style="background:#fdf0c0;color:var(--gold);margin:0 auto 14px">Trilha Concluída!</div>
+      <h2>${area.title}</h2>
+      <p>Parabéns! Você completou todos os ${area.topics.length} módulos desta trilha.</p>
+      <p style="margin-top:12px;color:var(--accent);font-weight:600">🎓 A aba <strong>Avaliação Final</strong> foi desbloqueada! Clique nela para realizar as 50 questões e obter seu certificado.</p>
+    </div>`);
+}
+
+// ═══════════════════════════════════════════════
+// SEND MESSAGE (free chat within topic)
+// ═══════════════════════════════════════════════
+async function sendMessage() {
+  if (state.loading) return;
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  state.loading = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  addMsg('user', text);
+
+  const lc = text.toLowerCase();
+  const wantsExercise = lc.includes('exercício') || lc.includes('praticar') || lc.includes('tarefa') || lc.includes('atividade');
+  const wantsNext = lc.includes('próximo') || lc.includes('avançar') || lc.includes('continuar') || lc.includes('próxima');
+
+  if (wantsExercise) {
+    await delay(400);
+    await triggerExercise();
+    state.loading = false;
+    document.getElementById('sendBtn').disabled = false;
+    return;
+  }
+
+  if (wantsNext && state.progress[state.area].quizDone) {
+    const done = state.progress[state.area].done;
+    if (!done.includes(state.topicIndex)) {
+      await triggerExercise();
+      state.loading = false;
+      document.getElementById('sendBtn').disabled = false;
+      return;
+    }
+  }
+
+  const area = AREAS[state.area];
+  const topic = area.topics[state.topicIndex] || area.topics[area.topics.length - 1];
+  const diagnosisSummary = state.quizAnswers.map(qa => `- ${qa.q}: ${qa.a}`).join('\n');
+  const systemPrompt = area.systemBase + `\n\nDiagnóstico:\n${diagnosisSummary}\n\nMódulo atual: ${state.topicIndex + 1} — "${topic.title}"\n\nQuando sentir que a conversa sobre este módulo está madura, sugira naturalmente que é hora do exercício prático do módulo.`;
+
+  state.history.push({ role: 'user', content: text });
+  showTyping();
+  const reply = await callClaude(systemPrompt, null, state.history);
+  removeTyping();
+  addMsg('ai', reply);
+  state.history.push({ role: 'assistant', content: reply });
+
+  // Auto-suggest exercise after 3+ exchanges
+  if (state.history.filter(m => m.role === 'user').length === 3 && !state.progress[state.area].done.includes(state.topicIndex)) {
+    await delay(800);
+    await triggerExercise();
+  }
+
+  state.loading = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+// ═══════════════════════════════════════════════
+// TRILHA & RECURSOS TABS
+// ═══════════════════════════════════════════════
+function renderTrilhaTab() {
+  const area = AREAS[state.area];
+  const done = state.progress[state.area].done;
+  const quizDone = state.progress[state.area].quizDone;
+  const cont = document.getElementById('trilhaContent');
+  cont.innerHTML = '';
+
+  const intro = document.createElement('div');
+  intro.style.cssText = 'padding:0 0 4px';
+  intro.innerHTML = `
+    <div class="card" style="max-width:100%;margin-bottom:4px">
+      <div class="card-tag">🗺️ Sua Trilha</div>
+      <h2 style="font-size:17px">${area.title}</h2>
+      <p style="margin:0">${area.topics.length} módulos progressivos · Exercícios práticos · Guiado pelo mentor</p>
+    </div>`;
+  cont.appendChild(intro);
+
+  // Quiz step
+  const qCard = document.createElement('div');
+  qCard.innerHTML = `
+    <div class="topic-card ${quizDone ? 'completed' : ''}" onclick="switchToChat()">
+      <div class="topic-num">${quizDone ? '✓' : '→'}</div>
+      <div class="topic-info">
+        <div class="topic-title">Diagnóstico Inicial</div>
+        <div class="topic-desc">Personalização da trilha para o seu perfil</div>
+        <div class="topic-meta"><span class="meta-tag">~2min</span><span class="meta-tag">${quizDone ? 'Concluído' : 'Em andamento'}</span></div>
+      </div>
+      <div class="topic-arrow">›</div>
+    </div>`;
+  cont.appendChild(qCard);
+
+  area.topics.forEach((t, i) => {
+    const isDone = done.includes(i);
+    const isCurrent = quizDone && i === (done.length < area.topics.length ? done.length : area.topics.length - 1) && !isDone;
+    const isLocked = !quizDone || i > (done.length);
+
+    const card = document.createElement('div');
+    card.innerHTML = `
+      <div class="topic-card ${isDone ? 'completed' : ''} ${isLocked && !isCurrent ? 'locked' : ''}" onclick="${isLocked ? '' : `goToTopic(${i})`}">
+        <div class="topic-num">${isDone ? '✓' : i + 1}</div>
+        <div class="topic-info">
+          <div class="topic-title">${t.title}</div>
+          <div class="topic-desc">${t.desc}</div>
+          <div class="topic-meta">
+            <span class="meta-tag">${t.time}</span>
+            <span class="meta-tag">${isDone ? 'Concluído' : isCurrent ? '▶ Atual' : isLocked ? '🔒 Bloqueado' : 'Disponível'}</span>
+          </div>
+        </div>
+        <div class="topic-arrow">›</div>
+      </div>`;
+    cont.appendChild(card);
   });
-  const proximo = String(maxSeq + 1).padStart(4, '0');
-  return prefixo + proximo;
 }
 
-// ── ENVIO DE E-MAIL VIA EMAILJS ──────────────────────────
-async function enviarEmailBoasVindas(aluno) {
-  if (!CONFIG.emailjs_public_key || !CONFIG.emailjs_service_id || !CONFIG.emailjs_template_id) {
-    console.log('EmailJS não configurado — e-mail não enviado automaticamente.');
-    return false;
+function renderRecursosTab() {
+  const area = AREAS[state.area];
+  const cont = document.getElementById('recursosContent');
+  cont.innerHTML = '';
+
+  const intro = document.createElement('div');
+  intro.innerHTML = `
+    <div class="card" style="max-width:100%;margin-bottom:8px">
+      <div class="card-tag">📚 Recursos</div>
+      <h2 style="font-size:17px">Materiais Recomendados</h2>
+      <p style="margin:0">Livros, vídeos, ferramentas e artigos selecionados para potencializar sua trilha de ${area.title}.</p>
+    </div>`;
+  cont.appendChild(intro);
+
+  const grid = document.createElement('div');
+  grid.className = 'resource-grid';
+
+  area.recursos.forEach(r => {
+    const item = document.createElement('div');
+    item.innerHTML = `
+      <div class="resource-item">
+        <div class="resource-icon ${r.type}"><span>${r.icon}</span></div>
+        <div>
+          <div class="resource-name">${r.name}</div>
+          <div class="resource-type">${r.cat}</div>
+        </div>
+      </div>`;
+    grid.appendChild(item);
+  });
+
+  cont.appendChild(grid);
+}
+
+function goToTopic(i) {
+  state.topicIndex = i;
+  state.history = [];
+  clearMessages();
+  switchTab('chat', document.querySelector('.tab-btn'));
+  startCurrentTopic();
+}
+
+function switchToChat() {
+  switchTab('chat', document.querySelector('.tab-btn'));
+}
+
+// ═══════════════════════════════════════════════
+// EXAM
+// ═══════════════════════════════════════════════
+let examState = {
+  questions: [],
+  answers: {},   // idx -> selected option index
+  submitted: false,
+  loading: false
+};
+
+async function renderExamTab() {
+  if (examState.questions.length > 0) return; // already generated
+  if (examState.loading) return;
+
+  const area = AREAS[state.area];
+  const cont = document.getElementById('examContent');
+  document.getElementById('examFooter').style.display = 'none';
+
+  cont.innerHTML = `
+    <div class="exam-header-card">
+      <div class="exam-header-tag">✦ Avaliação Final</div>
+      <div class="exam-header-title">${area.title}</div>
+      <div class="exam-header-sub">Avaliação abrangente com 50 questões de múltipla escolha cobrindo todos os 6 módulos da trilha.</div>
+      <div class="exam-stats">
+        <div class="exam-stat">50 questões</div>
+        <div class="exam-stat">4 alternativas cada</div>
+        <div class="exam-stat">Nota mínima: 70%</div>
+      </div>
+    </div>
+    <div class="exam-loading">
+      <div class="exam-loading-icon">⚙️</div>
+      <div class="exam-loading-text">Gerando sua avaliação personalizada…</div>
+      <div class="exam-loading-sub">A IA está criando 50 questões baseadas nos módulos que você completou.</div>
+    </div>`;
+
+  examState.loading = true;
+
+  const topicNames = area.topics.map((t, i) => `Módulo ${i+1}: ${t.title}`).join('\n');
+  const diagnosisCtx = state.quizAnswers.map(qa => `- ${qa.q}: ${qa.a}`).join('\n');
+
+  const prompt = `Crie uma avaliação final com exatamente 50 questões de múltipla escolha sobre a trilha de "${area.title}".
+
+Contexto do usuário:
+${diagnosisCtx}
+
+Módulos da trilha:
+${topicNames}
+
+Regras:
+- Distribua as questões: aproximadamente 8-9 por módulo (cobrindo todos os 6 módulos)
+- Cada questão tem 4 alternativas (a, b, c, d)
+- Apenas 1 alternativa correta
+- Questões práticas, aplicadas, baseadas em situações reais
+- Dificuldade variada (40% fácil, 40% médio, 20% difícil)
+- A alternativa correta deve variar entre a, b, c, d (não concentrar na mesma letra)
+
+Responda SOMENTE com um JSON válido, sem texto adicional, no formato:
+[
+  {
+    "module": "Módulo 1",
+    "question": "Texto da questão",
+    "options": ["opção a", "opção b", "opção c", "opção d"],
+    "correct": 0
   }
+]
+
+O campo "correct" é o índice (0-3) da opção correta.
+Gere todas as 50 questões.`;
+
   try {
-    if (!window.emailjs) {
-      await new Promise((res, rej) => {
-        const s = document.createElement('script');
-        s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-        s.onload = res; s.onerror = rej;
-        document.head.appendChild(s);
-      });
-      emailjs.init(CONFIG.emailjs_public_key);
-    }
-    await emailjs.send(CONFIG.emailjs_service_id, CONFIG.emailjs_template_id, {
-      to_email:  aluno.email,
-      to_name:   aluno.nome,
-      codigo:    aluno.codigo,
-      curso:     'Mentoria das Profissões + Inteligência Artificial',
-      responsavel: 'Luiz Carlos de Castro',
-    });
-    return true;
-  } catch(e) {
-    console.error('Erro EmailJS:', e);
-    return false;
-  }
-}
-
-function buildHeaders() {
-  return {
-    'Authorization': 'Bearer ' + getToken(),
-    'Accept': 'application/vnd.github+json',
-    'Content-Type': 'application/json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  };
-}
-
-// Inicializa o arquivo no GitHub se não existir
-async function ensureFileExists() {
-  const url = `https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.file}`;
-  const res = await fetch(url, { headers: buildHeaders() });
-  if (res.status === 404) {
-    // Cria o arquivo vazio
-    const body = {
-      message: 'Inicialização do cadastro de alunos',
-      content: btoa('[]')
-    };
-    const create = await fetch(url, {
-      method: 'PUT',
-      headers: buildHeaders(),
-      body: JSON.stringify(body)
-    });
-    if (!create.ok) throw new Error('Não foi possível inicializar o banco de dados.');
-  }
-}
-
-async function getFileSha() {
-  const res = await fetch(
-    `https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.file}`,
-    { headers: buildHeaders() }
-  );
-  if (res.ok) {
-    const data = await res.json();
-    fileSha = data.sha;
-    const decoded = decodeURIComponent(
-      atob(data.content.replace(/\n/g,''))
-        .split('').map(c => '%' + c.charCodeAt(0).toString(16).padStart(2,'0')).join('')
+    const raw = await callClaude(
+      `Você é um especialista em avaliações educacionais. Responda APENAS com JSON válido, sem markdown, sem texto extra.`,
+      prompt
     );
-    return JSON.parse(decoded);
-  }
-  if (res.status === 404) { fileSha = null; return []; }
-  throw new Error('HTTP ' + res.status);
-}
 
-async function enviarCadastro() {
-  const nome    = document.getElementById('f-nome').value.trim();
-  const email   = document.getElementById('f-email').value.trim();
-  const celular = document.getElementById('f-celular').value.trim();
-
-  if (!nome)    { toast('Por favor, informe seu nome completo.', 'error'); return; }
-  if (!email)   { toast('Por favor, informe um e-mail válido.', 'error'); return; }
-  if (!celular) { toast('Por favor, informe seu celular.', 'error'); return; }
-  if (!getToken()) { toast('Sistema em configuração. Tente mais tarde.', 'error'); return; }
-
-  document.getElementById('btn-enviar').disabled = true;
-  showLoading();
-
-  try {
-    // Garante que o arquivo existe
-    await ensureFileExists();
-    // Carrega lista atual
-    const alunos = await getFileSha();
-
-    // Verifica e-mail duplicado
-    if (alunos.find(a => a.email.toLowerCase() === email.toLowerCase())) {
-      hideLoading();
-      document.getElementById('btn-enviar').disabled = false;
-      toast('Este e-mail já está cadastrado!', 'error');
+    let parsed;
+    try {
+      const clean = raw.replace(/```json|```/g, '').trim();
+      parsed = JSON.parse(clean);
+    } catch(e) {
+      cont.innerHTML += `<div class="card"><p style="color:var(--danger)">Erro ao gerar questões. Tente novamente.</p><button class="btn-primary" onclick="examState.questions=[];renderExamTab()">Tentar Novamente</button></div>`;
+      examState.loading = false;
       return;
     }
 
-    // Gera código único para o aluno
-    const codigo = gerarCodigo(alunos);
-
-    // Adiciona novo aluno
-    const novoAluno = {
-      id:        'id_' + Date.now(),
-      codigo,
-      nome, email, celular,
-      sexo:      document.getElementById('f-sexo').value,
-      instrucao: document.getElementById('f-instrucao').value,
-      criadoEm:  new Date().toISOString()
-    };
-    alunos.push(novoAluno);
-
-    // Salva no GitHub
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(alunos, null, 2))));
-    const res = await fetch(
-      `https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.file}`,
-      {
-        method: 'PUT',
-        headers: buildHeaders(),
-        body: JSON.stringify({
-          message: 'Novo cadastro: ' + nome,
-          content: content,
-          ...(fileSha ? { sha: fileSha } : {})
-        })
-      }
-    );
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'HTTP ' + res.status);
-    }
-
-    hideLoading();
-    // Envia e-mail de boas-vindas com o código
-    enviarEmailBoasVindas(novoAluno).then(sent => {
-      if (sent) console.log('E-mail enviado para', novoAluno.email);
-    });
-    mostrarSucesso(novoAluno.codigo);
-
+    examState.questions = parsed.slice(0, 50);
+    examState.answers = {};
+    examState.submitted = false;
+    examState.loading = false;
+    renderExamQuestions();
   } catch(e) {
-    hideLoading();
-    document.getElementById('btn-enviar').disabled = false;
-    toast('Erro ao salvar: ' + e.message, 'error');
+    examState.loading = false;
   }
 }
 
-function mostrarSucesso(codigo) {
-  document.getElementById('form-section').style.display = 'none';
-  document.getElementById('success-screen').classList.add('active');
-  if (codigo) {
-    const el = document.getElementById('codigo-gerado');
-    if (el) el.textContent = codigo;
-    const box = document.getElementById('codigo-box');
-    if (box) box.style.display = 'block';
+function renderExamQuestions() {
+  const cont = document.getElementById('examContent');
+  const area = AREAS[state.area];
+  const letters = ['A','B','C','D'];
+
+  cont.innerHTML = `
+    <div class="exam-header-card">
+      <div class="exam-header-tag">✦ Avaliação Final</div>
+      <div class="exam-header-title">${area.title}</div>
+      <div class="exam-header-sub">Responda todas as 50 questões e clique em "Finalizar Avaliação".</div>
+      <div class="exam-stats">
+        <div class="exam-stat">50 questões</div>
+        <div class="exam-stat">Nota mínima: 70%</div>
+        <div class="exam-stat">Todos os 6 módulos</div>
+      </div>
+    </div>`;
+
+  examState.questions.forEach((q, idx) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'exam-question';
+    qDiv.id = `eq-${idx}`;
+    qDiv.innerHTML = `
+      <div class="exam-q-header">
+        <div class="exam-q-num">${idx + 1}</div>
+        <div class="exam-q-module">${q.module || ''}</div>
+      </div>
+      <div class="exam-q-text">${q.question}</div>
+      <div class="exam-options">
+        ${q.options.map((opt, oi) => `
+          <button class="exam-option" onclick="selectExamOption(${idx}, ${oi})">
+            <div class="exam-opt-letter">${letters[oi]}</div>
+            ${opt}
+          </button>`).join('')}
+      </div>`;
+    cont.appendChild(qDiv);
+  });
+
+  document.getElementById('examFooter').style.display = 'flex';
+  document.getElementById('examTotalCount').textContent = examState.questions.length;
+  updateExamCounter();
+}
+
+function selectExamOption(qIdx, optIdx) {
+  if (examState.submitted) return;
+  examState.answers[qIdx] = optIdx;
+
+  const qDiv = document.getElementById(`eq-${qIdx}`);
+  qDiv.querySelectorAll('.exam-option').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === optIdx);
+  });
+
+  updateExamCounter();
+}
+
+function updateExamCounter() {
+  const answered = Object.keys(examState.answers).length;
+  document.getElementById('examAnsweredCount').textContent = answered;
+  document.getElementById('examSubmitBtn').disabled = answered < examState.questions.length;
+}
+
+async function submitExam() {
+  if (examState.submitted) return;
+  const unanswered = examState.questions.length - Object.keys(examState.answers).length;
+  if (unanswered > 0) {
+    alert(`Ainda há ${unanswered} questões sem resposta. Responda todas para finalizar.`);
+    return;
   }
 
-  let count = 3;
-  const msg = document.getElementById('redirect-msg');
-  const interval = setInterval(() => {
-    count--;
-    msg.textContent = 'Redirecionando em ' + count + ' segundo' + (count !== 1 ? 's' : '') + '…';
-    if (count <= 0) {
-      clearInterval(interval);
-      window.location.href = CONFIG.redirectUrl;
-    }
-  }, 1000);
+  examState.submitted = true;
+  document.getElementById('examSubmitBtn').disabled = true;
+
+  let correct = 0;
+  const letters = ['A','B','C','D'];
+
+  examState.questions.forEach((q, idx) => {
+    const selected = examState.answers[idx];
+    const isCorrect = selected === q.correct;
+    if (isCorrect) correct++;
+
+    const qDiv = document.getElementById(`eq-${idx}`);
+    qDiv.querySelectorAll('.exam-option').forEach((btn, i) => {
+      btn.classList.remove('selected');
+      if (i === q.correct) btn.classList.add('correct');
+      else if (i === selected && !isCorrect) btn.classList.add('wrong');
+    });
+  });
+
+  const total = examState.questions.length;
+  const pct = Math.round((correct / total) * 100);
+  const passed = pct >= 70;
+  const ringClass = pct >= 90 ? 'gold' : pct >= 70 ? 'green' : 'red';
+
+  const area = AREAS[state.area];
+  const cont = document.getElementById('examContent');
+
+  const resultCard = document.createElement('div');
+  resultCard.className = 'exam-result-card';
+  resultCard.innerHTML = `
+    <div class="exam-score-ring ${ringClass}">
+      <div class="exam-score-pct">${pct}%</div>
+      <div class="exam-score-label">pontos</div>
+    </div>
+    <div class="exam-result-title">${pct >= 90 ? '🏆 Excelente!' : pct >= 70 ? '✅ Aprovado!' : '📚 Tente Novamente'}</div>
+    <div class="exam-result-sub">
+      ${passed
+        ? `Parabéns! Você demonstrou domínio sólido sobre a trilha de <strong>${area.title}</strong>. Seu desempenho reflete o trabalho realizado nos módulos.`
+        : `Você obteve ${pct}% de acertos. A nota mínima de aprovação é 70%. Revise os módulos com mais dificuldade e tente novamente.`}
+    </div>
+    <div class="exam-result-stats">
+      <div class="exam-result-stat">
+        <div class="exam-result-stat-num" style="color:#5cba8c">${correct}</div>
+        <div class="exam-result-stat-lbl">Corretas</div>
+      </div>
+      <div class="exam-result-stat">
+        <div class="exam-result-stat-num" style="color:#e05c5c">${total - correct}</div>
+        <div class="exam-result-stat-lbl">Incorretas</div>
+      </div>
+      <div class="exam-result-stat">
+        <div class="exam-result-stat-num">${total}</div>
+        <div class="exam-result-stat-lbl">Total</div>
+      </div>
+    </div>
+    ${passed ? `<button class="cert-btn" onclick="generateCertificate(${pct})">🎓 Gerar Certificado</button>` : `<button class="btn-primary" style="margin-top:16px" onclick="retakeExam()">↺ Refazer Avaliação</button>`}`;
+
+  cont.insertBefore(resultCard, cont.firstChild);
+  cont.scrollTop = 0;
+  document.getElementById('examFooter').style.display = 'none';
 }
 
-function maskPhone(el) {
-  let v = el.value.replace(/\D/g,'').slice(0,11);
-  if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
-  else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
-  el.value = v;
+function retakeExam() {
+  examState = { questions: [], answers: {}, submitted: false, loading: false };
+  renderExamTab();
 }
 
-function toast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.className = 'show ' + type;
-  clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 4000);
+function generateCertificate(score) {
+  const area = AREAS[state.area];
+  const date = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Certificado - ${area.title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=Syne:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { background: #f5f2eb; font-family: 'Syne', sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding: 40px; }
+      .cert { background: white; width: 800px; padding: 70px 80px; border: 1px solid #ddd8cc; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+      .cert::before { content:''; position:absolute; inset:12px; border: 2px solid #2d5a3d; pointer-events:none; }
+      .cert::after { content:''; position:absolute; inset:18px; border: 1px solid rgba(45,90,61,0.2); pointer-events:none; }
+      .header { text-align:center; margin-bottom:48px; }
+      .gem { width:52px;height:52px;background:linear-gradient(135deg,#2d5a3d,#4a8a5e);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px; }
+      .brand { font-family:'Fraunces',serif; font-size:22px; color:#2d5a3d; }
+      .divider { width:60px;height:2px;background:#c49a2a;margin:20px auto; }
+      .title { font-family:'Fraunces',serif; font-size:14px; letter-spacing:4px; text-transform:uppercase; color:#8a8578; margin-bottom:32px; }
+      .certifies { font-size:13px; color:#8a8578; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+      .name { font-family:'Fraunces',serif; font-size:42px; color:#1a1814; letter-spacing:-1px; margin-bottom:8px; }
+      .credential { font-size:13px; color:#8a8578; margin-bottom:40px; }
+      .completed { font-size:15px; color:#3d3a34; line-height:1.7; margin-bottom:8px; }
+      .area-name { font-family:'Fraunces',serif; font-size:22px; color:#2d5a3d; margin-bottom:32px; }
+      .score-badge { display:inline-block; padding:8px 20px; background:#faf3e0; border:1px solid #c49a2a; border-radius:20px; font-size:13px; color:#c49a2a; margin-bottom:48px; }
+      .footer { display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid #ddd8cc; padding-top:28px; }
+      .sig { text-align:center; }
+      .sig-line { width:160px; border-top:1px solid #1a1814; margin:0 auto 8px; }
+      .sig-name { font-size:12px; color:#3d3a34; font-weight:600; }
+      .sig-role { font-size:10px; color:#8a8578; margin-top:2px; }
+      .date-box { text-align:right; font-size:12px; color:#8a8578; }
+      @media print { body { background:white; } }
+    </style></head><body>
+    <div class="cert">
+      <div class="header">
+        <div class="gem">✦</div>
+        <div class="brand">MentorIA Pro</div>
+        <div class="divider"></div>
+        <div class="title">Certificado de Conclusão</div>
+      </div>
+      <div style="text-align:center">
+        <div class="certifies">Certificamos que</div>
+        <div class="name">Luiz de Castro</div>
+        <div class="credential">Mestre em Gestão e Adm. de Empresa</div>
+        <div class="completed">concluiu com êxito a trilha completa de</div>
+        <div class="area-name">${area.title}</div>
+        <div class="score-badge">📊 Nota Final: ${score}% · ${score >= 90 ? 'Distinção' : 'Aprovado'}</div>
+      </div>
+      <div class="footer">
+        <div class="sig">
+          <div class="sig-line"></div>
+          <div class="sig-name">MentorIA Pro</div>
+          <div class="sig-role">Plataforma de Mentoria com IA</div>
+        </div>
+        <div class="date-box">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Data de emissão</div>
+          <div style="font-size:13px;color:#1a1814;font-weight:600">${date}</div>
+        </div>
+      </div>
+    </div>
+    <script>window.onload=()=>setTimeout(()=>window.print(),600)<\/script>
+    </body></html>`);
+  win.document.close();
 }
 
-function showLoading() { document.getElementById('loading').classList.add('active'); }
-function hideLoading() { document.getElementById('loading').classList.remove('active'); }
+// ═══════════════════════════════════════════════
+// API KEY MANAGEMENT
+// ═══════════════════════════════════════════════
+let apiKey = localStorage.getItem('mentoria_api_key') || '';
 
-// ── PAINEL SECRETO DE CONFIGURAÇÃO ───────────────────────
-// Acesse: formulario-matricula.html#config
-function checkSecretPanel() {
-  const hash = window.location.hash;
-  if (hash === '#config' || hash === '#config/') {
-    const panel = document.getElementById('secret-panel');
-    panel.style.display = 'flex';
-    panel.style.opacity = '1';
-    const saved = getToken();
-    if (saved) {
-      document.getElementById('sp-token').value = saved;
-    }
-    console.log('Secret panel opened');
+function checkApiKey() {
+  if (apiKey && apiKey.startsWith('sk-ant')) {
+    document.getElementById('apiModal').style.display = 'none';
+    updateApiStatus(true);
+  } else {
+    document.getElementById('apiModal').style.display = 'flex';
+    updateApiStatus(false);
   }
 }
 
-function saveSecretToken() {
-  const t = document.getElementById('sp-token').value.trim();
-  if (!t) { alert('Cole o token antes de salvar.'); return; }
-  localStorage.setItem('_mtoken', t);
-  document.getElementById('secret-panel').style.display = 'none';
-  window.location.hash = '';
-  alert('✅ Token salvo! O formulário está pronto para uso.');
+function validateApiKey() {
+  const val = document.getElementById('apiKeyInput').value.trim();
+  document.getElementById('modalSaveBtn').disabled = !val.startsWith('sk-ant');
 }
 
-window.addEventListener('hashchange', checkSecretPanel);
-document.addEventListener('DOMContentLoaded', checkSecretPanel);
-checkSecretPanel();
+function saveApiKey() {
+  const val = document.getElementById('apiKeyInput').value.trim();
+  if (!val.startsWith('sk-ant')) return;
+  apiKey = val;
+  localStorage.setItem('mentoria_api_key', val);
+  document.getElementById('apiModal').style.display = 'none';
+  updateApiStatus(true);
+}
+
+function showApiModal() {
+  document.getElementById('apiKeyInput').value = apiKey || '';
+  document.getElementById('modalSaveBtn').disabled = !apiKey.startsWith('sk-ant');
+  document.getElementById('apiModal').style.display = 'flex';
+}
+
+function toggleApiVis() {
+  const inp = document.getElementById('apiKeyInput');
+  const btn = document.getElementById('eyeBtn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+function updateApiStatus(ok) {
+  const badge = document.getElementById('apiStatus');
+  badge.textContent = ok ? '🟢 API Conectada' : '🔴 Sem API Key';
+}
+
+// ═══════════════════════════════════════════════
+// API CALL
+// ═══════════════════════════════════════════════
+async function callClaude(system, userMsg, messages = null) {
+  if (!apiKey || !apiKey.startsWith('sk-ant')) {
+    showApiModal();
+    return 'Configure sua API key para continuar.';
+  }
+  try {
+    const msgs = messages || [{ role: 'user', content: userMsg }];
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system,
+        messages: msgs
+      })
+    });
+    const data = await response.json();
+    if (data.error) return `Erro da API: ${data.error.message}`;
+    return data.content?.[0]?.text || 'Desculpe, houve um erro. Tente novamente.';
+  } catch (e) {
+    return 'Erro de conexão. Verifique sua internet e tente novamente.';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
-
-<!-- PAINEL SECRETO -->
-<div id="secret-panel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:16px;padding:36px;max-width:460px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:8px;color:#0e0b08;">⚙️ Configuração</h3>
-    <p style="font-size:0.82rem;color:#888;margin-bottom:20px;">Cole o token do GitHub. Esta tela só aparece com <code>#config</code> na URL.</p>
-    <label style="font-size:0.75rem;font-weight:600;color:#a0521e;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:6px;">Token GitHub (PAT)</label>
-    <input type="password" id="sp-token" placeholder="github_pat_..." style="width:100%;padding:11px 14px;border:1.5px solid #d4b896;border-radius:8px;font-size:0.9rem;margin-bottom:16px;font-family:'Jost',sans-serif;">
-    <button onclick="saveSecretToken()" style="width:100%;padding:13px;background:linear-gradient(135deg,#6b3d1e,#c4864a);color:#fff;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-weight:600;font-size:0.95rem;cursor:pointer;">💾 Salvar Token</button>
-  </div>
-</div>
 </body>
 </html>
-

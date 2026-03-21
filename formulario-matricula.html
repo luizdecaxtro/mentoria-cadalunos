@@ -415,7 +415,7 @@
 const CONFIG = {
   repo:        'luizdecaxtro/mentoria-cadalunos',
   file:        'cadalunos.json',
-  redirectUrl: 'https://app.infinitepay.io/products/edit/8796396',  // << link de pagamento Infinitepay >>
+  redirectUrl: 'https://loja.infinitepay.io/decastro247/ehz6810-mentoria-das-profissoes-ia',
   // EmailJS — preencha após criar conta em emailjs.com (gratuito)
   emailjs_public_key:  'Yx_qgE1YjaUyqSALl',
   emailjs_service_id:  'service_vy9kv3d',
@@ -593,11 +593,11 @@ function mostrarSucesso(codigo) {
     if (box) box.style.display = 'block';
   }
 
-  let count = 3;
+  let count = 5;
   const msg = document.getElementById('redirect-msg');
   const interval = setInterval(() => {
     count--;
-    msg.textContent = 'Redirecionando em ' + count + ' segundo' + (count !== 1 ? 's' : '') + '…';
+    msg.textContent = 'Redirecionando para o pagamento em ' + count + ' segundo' + (count !== 1 ? 's' : '') + '…';
     if (count <= 0) {
       clearInterval(interval);
       window.location.href = CONFIG.redirectUrl;
@@ -662,3 +662,4 @@ checkSecretPanel();
 </div>
 </body>
 </html>
+

@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chatbot Mentoria IA — Widget</title>
+<title>Chatbot MIA — Widget v2</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════
-   CHATBOT MENTORIA DAS PROFISSÕES + IA
-   Cole este bloco no seu site Locaweb
+   CHATBOT MIA — Mentoria das Profissões + IA
+                  Mentoria das Startups
+                  Mentoria de Inovação
+   v2.0 — Vocabulário ampliado
    ══════════════════════════════════════ */
 
 #mia-chat-widget * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Karla', sans-serif; }
@@ -71,7 +73,7 @@
   right: 28px;
   width: 380px;
   max-width: calc(100vw - 40px);
-  height: 560px;
+  height: 580px;
   max-height: calc(100vh - 140px);
   background: #faf6f1;
   border: 1.5px solid #e2d5c8;
@@ -86,7 +88,6 @@
   transition: all .25s cubic-bezier(.34,1.56,.64,1);
 }
 
-/* Iframe mode — body transparente */
 body { background: transparent !important; margin: 0; padding: 0; }
 #mia-chat-btn, #mia-chat-window, #mia-pwd-modal { pointer-events: auto; }
 #mia-chat-window.open {
@@ -98,7 +99,7 @@ body { background: transparent !important; margin: 0; padding: 0; }
 /* Header */
 #mia-header {
   background: linear-gradient(135deg, #1c1714 0%, #2d2420 100%);
-  padding: 18px 20px 14px;
+  padding: 16px 20px 12px;
   border-bottom: 1px solid rgba(184,136,42,.3);
   flex-shrink: 0;
 }
@@ -147,11 +148,24 @@ body { background: transparent !important; margin: 0; padding: 0; }
   animation: mia-blink 2s infinite;
 }
 @keyframes mia-blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-.mia-header-sub {
-  font-size: .72rem;
-  color: rgba(250,246,241,1);
+
+/* Pílulas dos programas */
+.mia-programs {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 7px;
+}
+.mia-pill {
   font-family: 'Fira Code', monospace;
-  letter-spacing: .05em;
+  font-size: .58rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(184,136,42,.4);
+  color: rgba(212,160,48,.9);
+  background: rgba(184,136,42,.1);
+  letter-spacing: .04em;
+  white-space: nowrap;
 }
 
 /* Config button */
@@ -276,14 +290,8 @@ body { background: transparent !important; margin: 0; padding: 0; }
 }
 
 /* Typing indicator */
-.mia-typing .mia-bubble {
-  padding: 14px 18px;
-}
-.mia-typing-dots {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
+.mia-typing .mia-bubble { padding: 14px 18px; }
+.mia-typing-dots { display: flex; gap: 4px; align-items: center; }
 .mia-typing-dots span {
   width: 6px; height: 6px;
   border-radius: 50%;
@@ -296,9 +304,9 @@ body { background: transparent !important; margin: 0; padding: 0; }
 
 /* Sugestões rápidas */
 #mia-suggestions {
-  padding: 0 16px 10px;
+  padding: 0 16px 8px;
   display: flex;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
   flex-shrink: 0;
 }
@@ -306,8 +314,8 @@ body { background: transparent !important; margin: 0; padding: 0; }
   background: #fff;
   border: 1px solid #e2d5c8;
   border-radius: 20px;
-  padding: 5px 12px;
-  font-size: .75rem;
+  padding: 4px 11px;
+  font-size: .73rem;
   color: #3a2e28;
   cursor: pointer;
   transition: all .2s;
@@ -316,9 +324,33 @@ body { background: transparent !important; margin: 0; padding: 0; }
 }
 .mia-suggestion:hover { border-color: #b8882a; color: #b8882a; background: rgba(184,136,42,.05); }
 
+/* Tabs de sugestão por tema */
+#mia-sug-tabs {
+  padding: 0 16px 4px;
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.mia-sug-tab {
+  font-size: .67rem;
+  padding: 3px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid #e2d5c8;
+  background: #fff;
+  color: #888;
+  font-family: 'Fira Code', monospace;
+  transition: all .2s;
+}
+.mia-sug-tab.active {
+  background: #1c1714;
+  color: #d4a030;
+  border-color: #1c1714;
+}
+
 /* Input */
 #mia-input-area {
-  padding: 12px 16px 16px;
+  padding: 10px 16px 14px;
   border-top: 1px solid #e2d5c8;
   display: flex;
   gap: 8px;
@@ -391,10 +423,8 @@ body { background: transparent !important; margin: 0; padding: 0; }
 </head>
 <body style="background:transparent;margin:0;padding:0;">
 
-
-
 <!-- ══════════════════════════════════
-     INÍCIO DO WIDGET — COLE NO SEU SITE
+     INÍCIO DO WIDGET MIA v2.0
      ══════════════════════════════════ -->
 <div id="mia-chat-widget">
 
@@ -403,11 +433,9 @@ body { background: transparent !important; margin: 0; padding: 0; }
 
   <!-- Botão flutuante -->
   <button id="mia-chat-btn" onclick="miaToggle()" aria-label="Abrir chat">
-    <!-- Ícone chat -->
     <svg class="mia-chat-icon" viewBox="0 0 24 24" fill="none" stroke="#d4a030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
-    <!-- Ícone fechar -->
     <svg class="mia-close-icon" viewBox="0 0 24 24" fill="none" stroke="#d4a030" stroke-width="2.5" stroke-linecap="round">
       <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
     </svg>
@@ -421,7 +449,7 @@ body { background: transparent !important; margin: 0; padding: 0; }
       <div class="mia-header-top">
         <div class="mia-avatar">MIA</div>
         <div class="mia-header-info">
-          <div class="mia-header-name">Assistente <em>Mentoria das Profissões + IA</em></div>
+          <div class="mia-header-name">Assistente <em>Luiz de Castro</em></div>
           <div class="mia-header-status">
             <div class="mia-dot"></div>
             Online · Responde em segundos
@@ -429,7 +457,11 @@ body { background: transparent !important; margin: 0; padding: 0; }
         </div>
         <button id="mia-config-btn" onclick="miaAskPassword()" title="Configurar">⚙</button>
       </div>
-      <div class="mia-header-sub">MENTORIA DAS PROFISSÕES + INTELIGÊNCIA ARTIFICIAL</div>
+      <div class="mia-programs">
+        <span class="mia-pill">🤖 Profissões + IA</span>
+        <span class="mia-pill">🚀 Startups</span>
+        <span class="mia-pill">💡 Inovação</span>
+      </div>
     </div>
 
     <!-- Painel de configuração -->
@@ -453,15 +485,15 @@ body { background: transparent !important; margin: 0; padding: 0; }
     <!-- Mensagens -->
     <div id="mia-messages"></div>
 
-    <!-- Sugestões rápidas -->
-    <div id="mia-suggestions">
-      <button class="mia-suggestion" onclick="miaSuggest(this)">Minha profissão vai acabar com IA?</button>
-      <button class="mia-suggestion" onclick="miaSuggest(this)">Quais profissões estão em alta?</button>
-      <button class="mia-suggestion" onclick="miaSuggest(this)">Como usar IA no meu trabalho?</button>
-      <button class="mia-suggestion" onclick="miaSuggest(this)">O que é o curso de Mentoria?</button>
-      <button class="mia-suggestion" onclick="miaSuggest(this)">Quais ferramentas de IA usar?</button>
-      <button class="mia-suggestion" onclick="miaSuggest(this)">Como cobrar mais com IA?</button>
+    <!-- Tabs de sugestão -->
+    <div id="mia-sug-tabs">
+      <button class="mia-sug-tab active" onclick="miaSwitchTab(this,'ia')">🤖 IA</button>
+      <button class="mia-sug-tab" onclick="miaSwitchTab(this,'startups')">🚀 Startups</button>
+      <button class="mia-sug-tab" onclick="miaSwitchTab(this,'inovacao')">💡 Inovação</button>
     </div>
+
+    <!-- Sugestões rápidas -->
+    <div id="mia-suggestions"></div>
 
     <!-- Input -->
     <div id="mia-input-area">
@@ -477,12 +509,13 @@ body { background: transparent !important; margin: 0; padding: 0; }
 
   </div>
 </div>
+
 <!-- Modal de senha -->
 <div id="mia-pwd-modal" style="display:none;position:fixed;inset:0;background:rgba(28,23,20,.7);z-index:999999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:320px;width:90%;box-shadow:0 24px 80px rgba(28,23,20,.3);text-align:center;">
     <div style="font-family:'Libre Baskerville',serif;font-size:1.1rem;font-weight:700;color:#1c1714;margin-bottom:6px;">🔐 Área Restrita</div>
     <div style="font-size:.82rem;color:#888;margin-bottom:20px;line-height:1.5;">Digite a senha de administrador para acessar as configurações.</div>
-    <input type="password" id="mia-pwd-input" placeholder="Senha..." 
+    <input type="password" id="mia-pwd-input" placeholder="Senha..."
       style="width:100%;padding:11px 14px;border:1.5px solid #e2d5c8;border-radius:10px;font-size:.9rem;font-family:'Karla',sans-serif;outline:none;margin-bottom:10px;text-align:center;letter-spacing:.15em;"
       onkeydown="if(event.key==='Enter')miaCheckPassword()">
     <div id="mia-pwd-error" style="display:none;color:#c0553a;font-size:.78rem;margin-bottom:10px;">❌ Senha incorreta. Tente novamente.</div>
@@ -498,33 +531,35 @@ body { background: transparent !important; margin: 0; padding: 0; }
      ══════════════════════════════════ -->
 
 <script>
-// ══════════════════════════════════════════════
-// CHATBOT MIA — Mentoria das Profissões + IA
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════
+// CHATBOT MIA v2.0
+// Programas: Profissões + IA | Startups | Inovação
+// Autor do conteúdo: Luiz Carlos de Castro — Mestre em Gestão
+// ══════════════════════════════════════════════════════════════════
 
 const MIA_KEY_STORE = 'mia_anthropic_key';
-const MIA_SYSTEM = `Você é MIA, a assistente virtual da "Mentoria das Profissões + IA", criada por Luiz Carlos de Castro — Mestre em Gestão e Administrador de Empresas.
 
-Você é especialista em dois grandes temas interligados:
-1. Inteligência Artificial (ferramentas, conceitos, uso prático, modelos, automação)
-2. Profissões na Era da IA (quais crescem, quais mudam, como se adaptar e se posicionar)
+const MIA_SYSTEM = `Você é MIA, a assistente virtual dos programas de mentoria de Luiz Carlos de Castro — Mestre em Gestão e Administrador de Empresas.
 
-═══════════════════════════════════
-SOBRE O CURSO "MENTORIA DAS PROFISSÕES + IA"
-═══════════════════════════════════
+Você atende três programas interligados:
+1. "Mentoria das Profissões + IA" — Inteligência Artificial e o futuro do trabalho
+2. "Mentoria das Startups" — Do zero ao sucesso empreendedor
+3. "Mentoria de Inovação" — Inovação estratégica para profissionais e empresas
+
+═══════════════════════════════════════════════════════
+PROGRAMA 1 — MENTORIA DAS PROFISSÕES + IA
+Site: lojasdecastro.com.br | Carga: 60 horas
+═══════════════════════════════════════════════════════
+
+MÓDULOS:
 - Módulo 0 (Gratuito): O Mapa da IA — O que mudou, quais profissões em risco, como se adaptar
 - Módulo 1: Profissões em Alta (AI Engineer, AI Trainer, LLM Consultant, Analista de Dados com IA, AI Product Manager, Automação n8n/Make)
 - Módulo 2: Profissões Tradicionais + IA (Médico, Advogado, Contador, Designer, Redator, Dev, Educador e Coach aumentados por IA)
-- Módulo 3: Habilidades Insubstituíveis (Pensamento crítico, curadoria de informação, liderança, empatia, criatividade estratégica, síntese de contextos)
+- Módulo 3: Habilidades Insubstituíveis (Pensamento crítico, curadoria de informação, liderança, empatia, criatividade estratégica)
 - Módulo 4: Ferramentas Essenciais (Stack de produtividade com IA, ferramentas por área, fluxos de trabalho, laboratório prático)
 - Módulo 5: Plano de Carreira com IA (Diagnóstico de posicionamento, plano de transição/evolução, portfólio, LinkedIn na era da IA, como cobrar mais)
-- Carga horária: 60 horas | Responsável: Luiz Carlos de Castro | Site: lojasdecastro.com.br
 
-═══════════════════════════════════
-CONHECIMENTO SOBRE PROFISSÕES NA ERA DA IA
-═══════════════════════════════════
-
-PROFISSÕES EM ALTA (novas e fortalecidas pela IA):
+PROFISSÕES EM ALTA com IA:
 - AI Engineer: desenvolve sistemas e pipelines de IA para empresas
 - AI Trainer / Prompt Engineer: treina modelos, cria prompts e avalia respostas de IA
 - LLM Consultant: orienta empresas na adoção estratégica de modelos de linguagem
@@ -534,45 +569,19 @@ PROFISSÕES EM ALTA (novas e fortalecidas pela IA):
 - Criador de Conteúdo com IA: produz conteúdo em escala usando ferramentas de geração
 - Consultor de Implementação de IA: ajuda PMEs a adotar IA nos processos
 
-PROFISSÕES TRADICIONAIS TRANSFORMADAS PELA IA:
-- Médico/Saúde: diagnóstico assistido por IA, análise de exames, anamnese automatizada, telemedicina
+PROFISSÕES TRADICIONAIS TRANSFORMADAS:
+- Médico/Saúde: diagnóstico assistido por IA, análise de exames, telemedicina
 - Advogado/Jurídico: pesquisa jurídica com IA, análise de contratos, petições automatizadas
 - Contador/Financeiro: automação fiscal, análise preditiva, relatórios inteligentes
-- Designer/Criativo: geração de imagens (Midjourney, DALL-E), prototipagem rápida, UI automatizada
+- Designer/Criativo: geração de imagens (Midjourney, DALL-E), prototipagem rápida
 - Redator/Copywriter: produção em escala, SEO com IA, adaptação de tom e voz
-- Desenvolvedor/Dev: pair programming com IA (Cursor, GitHub Copilot), geração de código, testes automatizados
-- Educador/Professor: personalização de ensino, criação de material didático, tutoria com IA
-- Coach/Consultor: diagnósticos automatizados, relatórios de progresso, metodologias aumentadas por IA
-- RH/Recrutador: triagem de currículos com IA, análise de fit cultural, onboarding personalizado
-- Marketing/Vendas: personalização em escala, análise de dados de campanha, copy e criativo automatizados
-- Jornalista: pesquisa acelerada, verificação de fatos, produção de pautas
+- Desenvolvedor/Dev: pair programming (Cursor, GitHub Copilot), geração de código
+- Educador/Professor: personalização de ensino, tutoria com IA, material didático
+- Coach/Consultor: diagnósticos automatizados, metodologias aumentadas por IA
+- RH/Recrutador: triagem de currículos com IA, análise de fit cultural
+- Marketing/Vendas: personalização em escala, análise de dados, copy automatizado
 
-PROFISSÕES EM RISCO DE TRANSFORMAÇÃO PROFUNDA:
-- Atendimento ao cliente básico (substituído por chatbots)
-- Tradução simples (substituída por IA de tradução)
-- Entrada de dados e digitação (automatizada)
-- Análise de documentos repetitiva (automatizada)
-- Revisão ortográfica básica (automatizada)
-OBS: Mesmo essas profissões têm espaço para quem domina IA — o risco é para quem não se adapta.
-
-HABILIDADES HUMANAS QUE A IA NÃO SUBSTITUI:
-- Julgamento ético e tomada de decisão em contextos complexos
-- Empatia, escuta ativa e relacionamento interpessoal
-- Criatividade estratégica e pensamento lateral
-- Liderança e gestão de pessoas
-- Negociação e persuasão em situações de alta complexidade
-- Visão de negócio e contexto cultural
-
-TENDÊNCIAS DO MERCADO DE TRABALHO COM IA:
-- O futuro não é "IA vs humanos" mas "humanos com IA vs humanos sem IA"
-- Profissionais que usam IA entregam 2-5x mais em menos tempo
-- A precificação por valor (e não por hora) é favorecida por quem domina IA
-- Nichos específicos com IA valem muito mais do que generalistas
-- A curva de adoção está acelerada — quem começa agora tem vantagem
-
-═══════════════════════════════════
-FERRAMENTAS DE IA POR CATEGORIA
-═══════════════════════════════════
+FERRAMENTAS DE IA POR CATEGORIA:
 - Texto/Chat: ChatGPT (OpenAI), Claude (Anthropic), Gemini (Google), Perplexity
 - Imagem: Midjourney, DALL-E, Stable Diffusion, Adobe Firefly, Ideogram
 - Vídeo: Runway ML, HeyGen (avatares), Sora, Kling
@@ -581,27 +590,160 @@ FERRAMENTAS DE IA POR CATEGORIA
 - Automação: Make (Integromat), n8n, Zapier, ActivePieces
 - Apresentações: Gamma, Beautiful.ai, Tome
 - Pesquisa: Perplexity, Elicit, Consensus
-- Produtividade: Notion AI, Otter.ai (transcrição), Motion (agenda)
+- Produtividade: Notion AI, Otter.ai, Motion
 - Modelos locais: Ollama, LM Studio (privacidade total)
 
-═══════════════════════════════════
+TENDÊNCIAS:
+- O futuro não é "IA vs humanos" mas "humanos com IA vs humanos sem IA"
+- Profissionais que usam IA entregam 2-5x mais em menos tempo
+- A precificação por valor (e não por hora) é favorecida por quem domina IA
+- A curva de adoção está acelerada — quem começa agora tem vantagem
+
+═══════════════════════════════════════════════════════
+PROGRAMA 2 — MENTORIA DAS STARTUPS
+"Do Zero ao Sucesso Empreendedor" | Luiz de Castro
+═══════════════════════════════════════════════════════
+
+ESTRUTURA (8 módulos):
+
+Módulo 0 — Ideação & Validação (Iniciante | 3h20)
+- O que é uma Startup; Design Thinking; Identificando Dores do Mercado
+- MVP (Mínimo Produto Viável); Validação com Clientes Reais; Pivotar ou Perseverar
+- Metodologias: Lean Startup, Customer Development, Jobs-to-be-Done
+- Exemplos: Instagram (pivotou de Burbn), YouTube (era site de namoro), Slack (surgiu de empresa de games)
+
+Módulo 1 — Modelagem de Negócio (Iniciante | 4h10)
+- Business Model Canvas (9 blocos): Segmentos, Proposta de Valor, Canais, Relacionamento, Receitas, Recursos-Chave, Atividades-Chave, Parcerias, Custos
+- Value Proposition Canvas; Ideal Customer Profile (ICP) e Personas
+- Modelos de receita: SaaS, marketplace, freemium, transacional, licenciamento, publicidade, hardware
+
+Módulo 2 — Registro Legal da Startup (Iniciante | 3h45)
+- Tipos de empresa: MEI, LTDA, S.A. — quando usar cada um
+- Abertura pelo Portal Gov.br; CNAE; Contrato Social
+- Regimes tributários: Simples Nacional (até R$4,8mi), Lucro Presumido, Lucro Real
+- Propriedade Intelectual: marcas no INPI, patentes (20 anos), direito autoral de software
+- LGPD: conformidade, DPO, política de privacidade, multas de até 2% do faturamento
+
+Módulo 3 — Gestão Financeira (Intermediário | 4h30)
+- DRE, Balanço Patrimonial, Fluxo de Caixa (lucro ≠ caixa)
+- Métricas: CAC, LTV (relação LTV/CAC > 3), Churn (ideal <2%/mês), MRR, ARR
+- Burn Rate e Runway (manter 12-18 meses); regra: captar com 6+ meses de caixa
+- Precificação: por custo, por valor, por concorrência, freemium, múltiplos planos SaaS
+
+Módulo 4 — Marketing & Vendas (Intermediário | 4h)
+- Product-Market Fit (PMF): teste dos 40% de Sean Ellis; NPS acima de 50; churn baixo
+- Growth Hacking: loops virais, SEO, parcerias, automações de onboarding, experimentos A/B
+- Inbound vs Outbound vs Product-Led Growth (PLG): Slack, Notion, Figma como exemplos de PLG
+- Funil AARRR: Aquisição → Ativação → Retenção → Receita → Referral
+
+Módulo 5 — Captação & Investimento (Avançado | 5h15)
+- Tipos de investidor: Angels (R$50k–R$500k, 2-10% equity), VCs, Aceleradoras (YC, 500 Startups, Wayra)
+- Estágios: Pre-seed, Seed, Series A, B, C
+- Valuation: Berkus Method, Scorecard Method, DCF, múltiplos de ARR (5-20x para SaaS)
+  Referência: pre-seed R$2-8mi | seed R$8-25mi | Series A R$25-80mi
+- Pitch Deck de 10 slides (Sequoia): Problema, Solução, Por que agora, TAM/SAM/SOM, Produto, Tração, Modelo de negócio, Competição, Time, Pedido
+- Due Diligence e Term Sheet; Cap table; fontes alternativas: BNDES, FAPESP, Crowdfunding
+
+Módulo 6 — Operações & Escala (Avançado | 3h50)
+- Equipes de alta performance; OKRs (Objectives & Key Results): ciclo trimestral, atingimento ideal 60-70%
+- Processos e automações; Product Management: RICE, ICE Score, MoSCoW, Scrum, Kanban, Shape Up
+- LGPD compliance; Stack tecnológica e inovação contínua
+
+Módulo 7 — Expansão & Crescimento (Avançado | 3h30)
+- Internacionalização: Latam → Portugal/UE → EUA (estrutura Delaware para captar investimento americano)
+- Parcerias: OEM, white-label, integrações técnicas, co-marketing, canais de revenda
+- M&A, IPO (Abertura de Capital), Secondary
+- Exit: Fusão/Aquisição (90% dos exits globais), preparar a empresa desde o início
+- Inovação contínua: squads autônomos, regra dos 20%, aquisição estratégica, intraempreendedorismo
+
+MATERIAIS DO PROGRAMA (Startups):
+Glossário com 150+ termos; Business Model Canvas; Planilha Financeira (CAC/LTV/Burn Rate); Guia de Registro Legal; Pitch Deck Template; Métricas de Startup; Checklist do Empreendedor; Manual do Aluno
+
+═══════════════════════════════════════════════════════
+PROGRAMA 3 — MENTORIA DE INOVAÇÃO
+(Programa em desenvolvimento — conteúdo base)
+═══════════════════════════════════════════════════════
+
+A Mentoria de Inovação é o mais recente programa de Luiz de Castro, voltado para profissionais e gestores que querem incorporar uma cultura e metodologia de inovação sistemática em suas carreiras e organizações. O programa está em desenvolvimento e os detalhes completos serão divulgados em breve no site lojasdecastro.com.br.
+
+TEMAS CENTRAIS (base de conhecimento):
+- Tipos de inovação: incremental, disruptiva (Clayton Christensen), radical, de modelo de negócio
+- Design Thinking aplicado à inovação organizacional
+- Innovation Accounting: métricas para projetos em fase de exploração
+- Cultura de inovação: psicologia segura, gestão do erro, diversidade cognitiva
+- Open Innovation: ecossistemas, startups corporativas, hackathons, programas de intraempreendedorismo
+- Inovação orientada a dados: experimentação com A/B testing, product analytics, tomada de decisão baseada em evidências
+- Frameworks: Stage-Gate, Lean Startup corporativo, Jobs-to-be-Done, Blue Ocean Strategy
+- Inovação com IA: uso de modelos generativos para acelerar pesquisa, prototipagem e geração de ideias
+- Gestão de portfólio de inovação: o modelo 70-20-10 (70% core, 20% adjacente, 10% transformacional)
+- Tendências: economia circular, inovação social, sustentabilidade como vantagem competitiva
+
+Quando perguntado sobre detalhes específicos do programa de Inovação ainda não disponíveis, incentive o interessado a acompanhar o lançamento em lojasdecastro.com.br.
+
+═══════════════════════════════════════════════════════
 PERSONALIDADE E ESTILO DE RESPOSTA
-═══════════════════════════════════
+═══════════════════════════════════════════════════════
 - Tom: acolhedor, profissional, motivador e direto
 - Sempre em português do Brasil
 - Máximo de 4 parágrafos por resposta — seja objetivo e prático
 - Use exemplos reais e concretos sempre que possível
-- Quando a pergunta for sobre carreira, seja encorajador e mostre o caminho
-- Quando não souber algo muito específico do curso, sugira contato pelo site lojasdecastro.com.br
+- Quando a pergunta for sobre carreira ou negócio, seja encorajador e mostre o caminho
+- Quando não souber algo específico de algum curso, sugira contato pelo site lojasdecastro.com.br
 - Nunca diga que profissões vão "acabar" — diga que vão se transformar
-- Sempre termine respostas sobre carreira com uma ação prática que a pessoa pode tomar hoje`;
+- Identifique a qual programa a pergunta pertence e responda com esse contexto
+- Sempre termine respostas sobre carreira/negócio com uma ação prática que a pessoa pode tomar hoje`;
+
+// ──────────────────────────────────────
+// Sugestões por tema
+// ──────────────────────────────────────
+const MIA_SUGGESTIONS = {
+  ia: [
+    'Minha profissão vai mudar com IA?',
+    'Quais profissões estão em alta?',
+    'Como usar IA no meu trabalho?',
+    'Quais ferramentas de IA usar?',
+    'Como cobrar mais com IA?',
+    'O que é o curso de Profissões + IA?',
+  ],
+  startups: [
+    'Como validar minha ideia de startup?',
+    'O que é MVP e como criar um?',
+    'Como montar meu pitch para investidores?',
+    'O que é CAC, LTV e Churn?',
+    'Como abrir minha startup no Brasil?',
+    'Quando buscar investimento?',
+  ],
+  inovacao: [
+    'O que é inovação disruptiva?',
+    'Como criar cultura de inovação?',
+    'O que é Design Thinking?',
+    'Como usar IA para inovar?',
+    'O que é Open Innovation?',
+    'Quando começa a Mentoria de Inovação?',
+  ],
+};
 
 let miaHistory = [];
 let miaOpen = false;
 let miaConfigOpen = false;
 let miaLoading = false;
+let miaCurrentTab = 'ia';
 
 function miaGetKey(){ return localStorage.getItem(MIA_KEY_STORE) || ''; }
+
+function miaSwitchTab(el, tab) {
+  document.querySelectorAll('.mia-sug-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  miaCurrentTab = tab;
+  miaRenderSuggestions();
+}
+
+function miaRenderSuggestions() {
+  const container = document.getElementById('mia-suggestions');
+  container.innerHTML = MIA_SUGGESTIONS[miaCurrentTab]
+    .map(s => `<button class="mia-suggestion" onclick="miaSuggest(this)">${s}</button>`)
+    .join('');
+}
 
 function miaToggle(){
   miaOpen = !miaOpen;
@@ -650,18 +792,18 @@ function miaCheckKey(){
   document.getElementById('mia-no-key').classList.toggle('show', !hasKey);
   document.getElementById('mia-messages').style.display = hasKey ? 'flex' : 'none';
   document.getElementById('mia-suggestions').style.display = hasKey ? 'flex' : 'none';
+  document.getElementById('mia-sug-tabs').style.display = hasKey ? 'flex' : 'none';
   document.getElementById('mia-input-area').style.display = hasKey ? 'flex' : 'none';
 }
 
 function miaWelcome(){
-  miaAddMsg('bot', 'Olá! 👋 Sou a <strong>MIA</strong>, assistente da Mentoria das Profissões + IA.<br><br>Pode me perguntar sobre <strong>Inteligência Artificial</strong>, as ferramentas do mercado, ou tirar dúvidas sobre o <strong>nosso curso</strong>. Como posso te ajudar?');
+  miaAddMsg('bot', 'Olá! 👋 Sou a <strong>MIA</strong>, assistente dos programas de mentoria de Luiz de Castro.<br><br>Posso ajudar com dúvidas sobre <strong>IA e o futuro das profissões</strong>, <strong>como criar e escalar startups</strong>, ou sobre a nova <strong>Mentoria de Inovação</strong>. Por onde quer começar?');
 }
 
 function miaAddMsg(role, html, isTyping = false){
   const msgs = document.getElementById('mia-messages');
   const div = document.createElement('div');
   div.className = `mia-msg ${role}${isTyping ? ' mia-typing' : ''}`;
-
   const initials = role === 'bot' ? 'MIA' : 'EU';
   div.innerHTML = `
     <div class="mia-msg-avatar">${initials}</div>
@@ -674,7 +816,6 @@ function miaAddMsg(role, html, isTyping = false){
 
 function miaSuggest(btn){
   document.getElementById('mia-input').value = btn.textContent;
-  document.getElementById('mia-suggestions').style.display = 'none';
   miaSend();
 }
 
@@ -688,7 +829,6 @@ async function miaSend(){
 
   input.value = '';
   input.style.height = 'auto';
-  document.getElementById('mia-suggestions').style.display = 'none';
 
   miaAddMsg('user', text);
   miaHistory.push({ role: 'user', content: text });
@@ -707,7 +847,7 @@ async function miaSend(){
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 600,
+        max_tokens: 700,
         system: MIA_SYSTEM,
         messages: miaHistory
       })
@@ -727,7 +867,6 @@ async function miaSend(){
     miaHistory.push({ role: 'assistant', content: reply });
 
     typingEl.remove();
-    // Converte quebras de linha em <br> e negrito com **
     const formatted = reply
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\n/g, '<br>');
@@ -751,12 +890,10 @@ async function miaSend(){
 
 // ══════════════════════════════
 // PROTEÇÃO POR SENHA
-// Altere a senha abaixo (só você sabe)
 // ══════════════════════════════
 const MIA_ADMIN_PASSWORD = 'mentoria2026';  // ← TROQUE ESTA SENHA
 
 function miaAskPassword(){
-  // Se já autenticou nesta sessão, abre direto
   if(sessionStorage.getItem('mia_auth') === 'ok'){
     miaToggleConfig();
     return;
@@ -772,9 +909,7 @@ function miaCheckPassword(){
   const val = document.getElementById('mia-pwd-input').value;
   if(val === MIA_ADMIN_PASSWORD){
     sessionStorage.setItem('mia_auth', 'ok');
-    // Fecha modal de senha
     document.getElementById('mia-pwd-modal').style.display = 'none';
-    // Abre painel de configuração diretamente
     miaConfigOpen = true;
     document.getElementById('mia-config-panel').classList.add('show');
     const saved = miaGetKey();
@@ -794,7 +929,6 @@ function miaClosePwdModal(){
   document.getElementById('mia-pwd-modal').style.display = 'none';
 }
 
-// Fecha modal clicando fora
 document.addEventListener('click', (e) => {
   const modal = document.getElementById('mia-pwd-modal');
   if(e.target === modal) miaClosePwdModal();
@@ -802,8 +936,8 @@ document.addEventListener('click', (e) => {
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
+  miaRenderSuggestions();
   miaCheckKey();
-  // Mostra badge por 8 segundos depois remove
   setTimeout(() => {
     const b = document.getElementById('mia-badge');
     if(b) b.style.display = 'none';

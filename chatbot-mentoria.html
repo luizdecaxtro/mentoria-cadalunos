@@ -3,41 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chatbot MIA — Widget v2</title>
+<title>Chatbot MIA — Widget v3</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════
-   CHATBOT MIA — Mentoria das Profissões + IA
-                  Mentoria das Startups
-                  Mentoria de Inovação
-   v2.0 — Vocabulário ampliado
+   CHATBOT MIA v3.0
+   Programas atendidos:
+   1. Mentoria das Profissões + IA
+   2. Mentoria das Startups
+   3. Mentoria de Inovação (geral)
+   4. MITE — Mentoria de Inovação
+          Tecnológica em Educação (NOVO)
    ══════════════════════════════════════ */
 
 #mia-chat-widget * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Karla', sans-serif; }
 
-/* Botão flutuante */
 #mia-chat-btn {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
+  position: fixed; bottom: 28px; right: 28px;
+  width: 62px; height: 62px; border-radius: 50%;
   background: linear-gradient(135deg, #1c1714, #3a2e28);
   border: 2px solid #b8882a;
   box-shadow: 0 8px 32px rgba(28,23,20,.35), 0 0 0 0 rgba(184,136,42,.4);
-  cursor: pointer;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all .3s ease;
-  animation: mia-pulse 3s infinite;
+  cursor: pointer; z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .3s ease; animation: mia-pulse 3s infinite;
 }
-#mia-chat-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 12px 40px rgba(28,23,20,.45), 0 0 0 6px rgba(184,136,42,.15);
-}
+#mia-chat-btn:hover { transform: scale(1.08); box-shadow: 0 12px 40px rgba(28,23,20,.45), 0 0 0 6px rgba(184,136,42,.15); }
 #mia-chat-btn svg { width: 26px; height: 26px; }
 #mia-chat-btn .mia-close-icon { display: none; }
 #mia-chat-btn.open .mia-chat-icon { display: none; }
@@ -48,390 +39,165 @@
   50% { box-shadow: 0 8px 32px rgba(28,23,20,.35), 0 0 0 10px rgba(184,136,42,0); }
 }
 
-/* Badge de notificação */
 #mia-badge {
-  position: fixed;
-  bottom: 82px;
-  right: 24px;
-  background: #c0553a;
-  color: #fff;
-  font-size: .72rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-  z-index: 99998;
-  white-space: nowrap;
+  position: fixed; bottom: 82px; right: 24px;
+  background: #c0553a; color: #fff;
+  font-size: .72rem; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px;
+  z-index: 99998; white-space: nowrap;
   animation: mia-fadein .5s ease 2s both;
   font-family: 'Karla', sans-serif;
 }
 @keyframes mia-fadein { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
 
-/* Janela do chat */
 #mia-chat-window {
-  position: fixed;
-  bottom: 104px;
-  right: 28px;
-  width: 380px;
-  max-width: calc(100vw - 40px);
-  height: 580px;
-  max-height: calc(100vh - 140px);
+  position: fixed; bottom: 104px; right: 28px;
+  width: 380px; max-width: calc(100vw - 40px);
+  height: 600px; max-height: calc(100vh - 140px);
   background: #faf6f1;
-  border: 1.5px solid #e2d5c8;
-  border-radius: 20px;
+  border: 1.5px solid #e2d5c8; border-radius: 20px;
   box-shadow: 0 24px 80px rgba(28,23,20,.2), 0 4px 20px rgba(28,23,20,.1);
-  z-index: 99998;
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-  transform: scale(.95) translateY(10px);
-  opacity: 0;
+  z-index: 99998; display: none; flex-direction: column; overflow: hidden;
+  transform: scale(.95) translateY(10px); opacity: 0;
   transition: all .25s cubic-bezier(.34,1.56,.64,1);
 }
-
 body { background: transparent !important; margin: 0; padding: 0; }
 #mia-chat-btn, #mia-chat-window, #mia-pwd-modal { pointer-events: auto; }
-#mia-chat-window.open {
-  display: flex;
-  transform: scale(1) translateY(0);
-  opacity: 1;
-}
+#mia-chat-window.open { display: flex; transform: scale(1) translateY(0); opacity: 1; }
 
-/* Header */
 #mia-header {
   background: linear-gradient(135deg, #1c1714 0%, #2d2420 100%);
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid rgba(184,136,42,.3);
-  flex-shrink: 0;
+  padding: 16px 20px 12px; border-bottom: 1px solid rgba(184,136,42,.3); flex-shrink: 0;
 }
-.mia-header-top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 6px;
-}
+.mia-header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
 .mia-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+  width: 38px; height: 38px; border-radius: 50%;
   background: linear-gradient(135deg, #b8882a, #d4a030);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Libre Baskerville', serif;
-  font-size: .9rem;
-  font-weight: 700;
-  color: #1c1714;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Libre Baskerville', serif; font-size: .9rem; font-weight: 700;
+  color: #1c1714; flex-shrink: 0;
 }
 .mia-header-info { flex: 1; }
-.mia-header-name {
-  font-family: 'Libre Baskerville', serif;
-  font-size: .95rem;
-  font-weight: 700;
-  color: #faf6f1;
-  line-height: 1.2;
-}
+.mia-header-name { font-family: 'Libre Baskerville', serif; font-size: .95rem; font-weight: 700; color: #faf6f1; line-height: 1.2; }
 .mia-header-name em { color: #d4a030; font-style: italic; }
-.mia-header-status {
-  font-family: 'Fira Code', monospace;
-  font-size: .65rem;
-  color: rgba(250,246,241,1);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 2px;
-}
-.mia-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #4a7c59;
-  animation: mia-blink 2s infinite;
-}
+.mia-header-status { font-family: 'Fira Code', monospace; font-size: .65rem; color: rgba(250,246,241,1); display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+.mia-dot { width: 6px; height: 6px; border-radius: 50%; background: #4a7c59; animation: mia-blink 2s infinite; }
 @keyframes mia-blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-/* Pílulas dos programas */
-.mia-programs {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin-top: 7px;
-}
+.mia-programs { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 7px; }
 .mia-pill {
-  font-family: 'Fira Code', monospace;
-  font-size: .58rem;
-  padding: 2px 8px;
-  border-radius: 10px;
-  border: 1px solid rgba(184,136,42,.4);
-  color: rgba(212,160,48,.9);
-  background: rgba(184,136,42,.1);
-  letter-spacing: .04em;
-  white-space: nowrap;
+  font-family: 'Fira Code', monospace; font-size: .58rem;
+  padding: 2px 8px; border-radius: 10px;
+  border: 1px solid rgba(184,136,42,.4); color: rgba(212,160,48,.9);
+  background: rgba(184,136,42,.1); letter-spacing: .04em; white-space: nowrap;
+}
+/* Pílula especial MITE */
+.mia-pill.mite {
+  border-color: rgba(91,163,255,.4); color: rgba(91,163,255,.9);
+  background: rgba(56,132,255,.1);
 }
 
-/* Config button */
 #mia-config-btn {
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
-  color: rgba(250,246,241,.5);
-  font-size: .75rem;
-  transition: all .2s;
-  flex-shrink: 0;
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px; padding: 6px 10px; cursor: pointer;
+  color: rgba(250,246,241,.5); font-size: .75rem; transition: all .2s; flex-shrink: 0;
 }
 #mia-config-btn:hover { background: rgba(255,255,255,.12); color: #d4a030; }
 
-/* Painel de configuração */
-#mia-config-panel {
-  display: none;
-  background: #1c1714;
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(184,136,42,.2);
-  flex-shrink: 0;
-}
+#mia-config-panel { display: none; background: #1c1714; padding: 16px 20px; border-bottom: 1px solid rgba(184,136,42,.2); flex-shrink: 0; }
 #mia-config-panel.show { display: block; }
-.mia-config-label {
-  font-family: 'Fira Code', monospace;
-  font-size: .65rem;
-  color: #b8882a;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
+.mia-config-label { font-family: 'Fira Code', monospace; font-size: .65rem; color: #b8882a; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
 .mia-config-row { display: flex; gap: 8px; }
-#mia-api-input {
-  flex: 1;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(184,136,42,.3);
-  border-radius: 7px;
-  padding: 8px 12px;
-  color: #faf6f1;
-  font-family: 'Fira Code', monospace;
-  font-size: .72rem;
-  outline: none;
-}
+#mia-api-input { flex: 1; background: rgba(255,255,255,.06); border: 1px solid rgba(184,136,42,.3); border-radius: 7px; padding: 8px 12px; color: #faf6f1; font-family: 'Fira Code', monospace; font-size: .72rem; outline: none; }
 #mia-api-input:focus { border-color: #b8882a; }
-#mia-api-save {
-  background: #b8882a;
-  color: #1c1714;
-  border: none;
-  border-radius: 7px;
-  padding: 8px 14px;
-  font-weight: 700;
-  font-size: .78rem;
-  cursor: pointer;
-  font-family: 'Karla', sans-serif;
-  transition: all .2s;
-}
+#mia-api-save { background: #b8882a; color: #1c1714; border: none; border-radius: 7px; padding: 8px 14px; font-weight: 700; font-size: .78rem; cursor: pointer; font-family: 'Karla', sans-serif; transition: all .2s; }
 #mia-api-save:hover { background: #d4a030; }
 .mia-config-hint { font-size: .68rem; color: rgba(250,246,241,.3); margin-top: 6px; }
 
-/* Mensagens */
-#mia-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  scroll-behavior: smooth;
-}
+#mia-messages { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
 #mia-messages::-webkit-scrollbar { width: 4px; }
 #mia-messages::-webkit-scrollbar-track { background: transparent; }
 #mia-messages::-webkit-scrollbar-thumb { background: #e2d5c8; border-radius: 2px; }
 
-.mia-msg {
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-  animation: mia-msgin .2s ease;
-}
+.mia-msg { display: flex; gap: 8px; align-items: flex-end; animation: mia-msgin .2s ease; }
 @keyframes mia-msgin { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-
 .mia-msg.user { flex-direction: row-reverse; }
 
 .mia-msg-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: 28px; height: 28px; border-radius: 50%;
   background: linear-gradient(135deg, #b8882a, #d4a030);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: .65rem;
-  font-weight: 700;
-  color: #1c1714;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem; font-weight: 700; color: #1c1714; flex-shrink: 0;
   font-family: 'Libre Baskerville', serif;
 }
-.mia-msg.user .mia-msg-avatar {
-  background: linear-gradient(135deg, #4a7c59, #5a9c6a);
-  color: #fff;
-}
+.mia-msg.user .mia-msg-avatar { background: linear-gradient(135deg, #4a7c59, #5a9c6a); color: #fff; }
 
-.mia-bubble {
-  max-width: 78%;
-  padding: 12px 15px;
-  border-radius: 14px;
-  font-size: .88rem;
-  line-height: 1.55;
-  color: #1c1714;
-}
-.mia-msg.bot .mia-bubble {
-  background: #fff;
-  border: 1px solid #e2d5c8;
-  border-bottom-left-radius: 4px;
-}
-.mia-msg.user .mia-bubble {
-  background: linear-gradient(135deg, #1c1714, #2d2420);
-  color: #faf6f1;
-  border-bottom-right-radius: 4px;
-}
+.mia-bubble { max-width: 78%; padding: 12px 15px; border-radius: 14px; font-size: .88rem; line-height: 1.55; color: #1c1714; }
+.mia-msg.bot .mia-bubble { background: #fff; border: 1px solid #e2d5c8; border-bottom-left-radius: 4px; }
+.mia-msg.user .mia-bubble { background: linear-gradient(135deg, #1c1714, #2d2420); color: #faf6f1; border-bottom-right-radius: 4px; }
 
-/* Typing indicator */
 .mia-typing .mia-bubble { padding: 14px 18px; }
 .mia-typing-dots { display: flex; gap: 4px; align-items: center; }
-.mia-typing-dots span {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #b8882a;
-  animation: mia-bounce .8s infinite;
-}
+.mia-typing-dots span { width: 6px; height: 6px; border-radius: 50%; background: #b8882a; animation: mia-bounce .8s infinite; }
 .mia-typing-dots span:nth-child(2) { animation-delay: .15s; }
 .mia-typing-dots span:nth-child(3) { animation-delay: .3s; }
 @keyframes mia-bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-5px)} }
 
-/* Sugestões rápidas */
-#mia-suggestions {
-  padding: 0 16px 8px;
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
+#mia-suggestions { padding: 0 16px 8px; display: flex; gap: 5px; flex-wrap: wrap; flex-shrink: 0; }
 .mia-suggestion {
-  background: #fff;
-  border: 1px solid #e2d5c8;
-  border-radius: 20px;
-  padding: 4px 11px;
-  font-size: .73rem;
-  color: #3a2e28;
-  cursor: pointer;
-  transition: all .2s;
-  white-space: nowrap;
-  font-family: 'Karla', sans-serif;
+  background: #fff; border: 1px solid #e2d5c8; border-radius: 20px;
+  padding: 4px 11px; font-size: .73rem; color: #3a2e28; cursor: pointer;
+  transition: all .2s; white-space: nowrap; font-family: 'Karla', sans-serif;
 }
 .mia-suggestion:hover { border-color: #b8882a; color: #b8882a; background: rgba(184,136,42,.05); }
 
-/* Tabs de sugestão por tema */
-#mia-sug-tabs {
-  padding: 0 16px 4px;
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-}
+#mia-sug-tabs { padding: 0 16px 4px; display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; }
 .mia-sug-tab {
-  font-size: .67rem;
-  padding: 3px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  border: 1px solid #e2d5c8;
-  background: #fff;
-  color: #888;
-  font-family: 'Fira Code', monospace;
-  transition: all .2s;
+  font-size: .67rem; padding: 3px 10px; border-radius: 10px;
+  cursor: pointer; border: 1px solid #e2d5c8; background: #fff;
+  color: #888; font-family: 'Fira Code', monospace; transition: all .2s;
 }
-.mia-sug-tab.active {
-  background: #1c1714;
-  color: #d4a030;
-  border-color: #1c1714;
-}
+.mia-sug-tab.active { background: #1c1714; color: #d4a030; border-color: #1c1714; }
+/* Tab MITE tem cor azul quando ativa */
+.mia-sug-tab.mite-tab.active { background: #0d1b2e; color: #5ba3ff; border-color: #1a3a6a; }
 
-/* Input */
 #mia-input-area {
-  padding: 10px 16px 14px;
-  border-top: 1px solid #e2d5c8;
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-  background: #fff;
-  flex-shrink: 0;
+  padding: 10px 16px 14px; border-top: 1px solid #e2d5c8;
+  display: flex; gap: 8px; align-items: flex-end;
+  background: #fff; flex-shrink: 0;
 }
 #mia-input {
-  flex: 1;
-  border: 1.5px solid #e2d5c8;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-family: 'Karla', sans-serif;
-  font-size: .88rem;
-  color: #1c1714;
-  background: #faf6f1;
-  outline: none;
-  resize: none;
-  max-height: 100px;
-  transition: border-color .2s;
-  line-height: 1.4;
+  flex: 1; border: 1.5px solid #e2d5c8; border-radius: 12px;
+  padding: 10px 14px; font-family: 'Karla', sans-serif; font-size: .88rem;
+  color: #1c1714; background: #faf6f1; outline: none; resize: none;
+  max-height: 100px; transition: border-color .2s; line-height: 1.4;
 }
 #mia-input:focus { border-color: #b8882a; }
 #mia-input::placeholder { color: #bbb; }
 #mia-send {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 40px; height: 40px; border-radius: 10px;
   background: linear-gradient(135deg, #1c1714, #3a2e28);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all .2s;
-  flex-shrink: 0;
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .2s; flex-shrink: 0;
 }
 #mia-send:hover { background: #c0553a; transform: scale(1.05); }
 #mia-send:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 #mia-send svg { width: 16px; height: 16px; }
 
-/* Sem API key */
-#mia-no-key {
-  display: none;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 24px;
-  text-align: center;
-  gap: 12px;
-}
+#mia-no-key { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; text-align: center; gap: 12px; }
 #mia-no-key.show { display: flex; }
 .mia-no-key-icon { font-size: 2.5rem; }
 .mia-no-key-title { font-family: 'Libre Baskerville', serif; font-size: 1rem; color: #1c1714; font-weight: 700; }
 .mia-no-key-sub { font-size: .82rem; color: #888; line-height: 1.5; }
-.mia-no-key-btn {
-  background: #b8882a;
-  color: #1c1714;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 700;
-  font-size: .85rem;
-  cursor: pointer;
-  font-family: 'Karla', sans-serif;
-  margin-top: 4px;
-}
+.mia-no-key-btn { background: #b8882a; color: #1c1714; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 700; font-size: .85rem; cursor: pointer; font-family: 'Karla', sans-serif; margin-top: 4px; }
 </style>
 </head>
 <body style="background:transparent;margin:0;padding:0;">
 
-<!-- ══════════════════════════════════
-     INÍCIO DO WIDGET MIA v2.0
-     ══════════════════════════════════ -->
 <div id="mia-chat-widget">
 
-  <!-- Badge -->
   <div id="mia-badge">💬 Tire suas dúvidas!</div>
 
-  <!-- Botão flutuante -->
   <button id="mia-chat-btn" onclick="miaToggle()" aria-label="Abrir chat">
     <svg class="mia-chat-icon" viewBox="0 0 24 24" fill="none" stroke="#d4a030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -441,10 +207,8 @@ body { background: transparent !important; margin: 0; padding: 0; }
     </svg>
   </button>
 
-  <!-- Janela do chat -->
   <div id="mia-chat-window">
 
-    <!-- Header -->
     <div id="mia-header">
       <div class="mia-header-top">
         <div class="mia-avatar">MIA</div>
@@ -461,10 +225,10 @@ body { background: transparent !important; margin: 0; padding: 0; }
         <span class="mia-pill">🤖 Profissões + IA</span>
         <span class="mia-pill">🚀 Startups</span>
         <span class="mia-pill">💡 Inovação</span>
+        <span class="mia-pill mite">🎓 MITE</span>
       </div>
     </div>
 
-    <!-- Painel de configuração -->
     <div id="mia-config-panel">
       <div class="mia-config-label">🔑 Anthropic API Key</div>
       <div class="mia-config-row">
@@ -474,7 +238,6 @@ body { background: transparent !important; margin: 0; padding: 0; }
       <div class="mia-config-hint">A chave é salva apenas no seu navegador (localStorage). Nunca é enviada a terceiros.</div>
     </div>
 
-    <!-- Sem API Key -->
     <div id="mia-no-key">
       <div class="mia-no-key-icon">🔑</div>
       <div class="mia-no-key-title">Configure sua API Key</div>
@@ -482,20 +245,17 @@ body { background: transparent !important; margin: 0; padding: 0; }
       <button class="mia-no-key-btn" onclick="miaToggleConfig()">⚙ Configurar agora</button>
     </div>
 
-    <!-- Mensagens -->
     <div id="mia-messages"></div>
 
-    <!-- Tabs de sugestão -->
     <div id="mia-sug-tabs">
       <button class="mia-sug-tab active" onclick="miaSwitchTab(this,'ia')">🤖 IA</button>
       <button class="mia-sug-tab" onclick="miaSwitchTab(this,'startups')">🚀 Startups</button>
       <button class="mia-sug-tab" onclick="miaSwitchTab(this,'inovacao')">💡 Inovação</button>
+      <button class="mia-sug-tab mite-tab" onclick="miaSwitchTab(this,'mite')">🎓 MITE</button>
     </div>
 
-    <!-- Sugestões rápidas -->
     <div id="mia-suggestions"></div>
 
-    <!-- Input -->
     <div id="mia-input-area">
       <textarea id="mia-input" placeholder="Digite sua dúvida..." rows="1"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();miaSend();}"
@@ -510,7 +270,6 @@ body { background: transparent !important; margin: 0; padding: 0; }
   </div>
 </div>
 
-<!-- Modal de senha -->
 <div id="mia-pwd-modal" style="display:none;position:fixed;inset:0;background:rgba(28,23,20,.7);z-index:999999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:320px;width:90%;box-shadow:0 24px 80px rgba(28,23,20,.3);text-align:center;">
     <div style="font-family:'Libre Baskerville',serif;font-size:1.1rem;font-weight:700;color:#1c1714;margin-bottom:6px;">🔐 Área Restrita</div>
@@ -526,14 +285,10 @@ body { background: transparent !important; margin: 0; padding: 0; }
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     FIM DO WIDGET
-     ══════════════════════════════════ -->
-
 <script>
 // ══════════════════════════════════════════════════════════════════
-// CHATBOT MIA v2.0
-// Programas: Profissões + IA | Startups | Inovação
+// CHATBOT MIA v3.0
+// Programas: Profissões + IA | Startups | Inovação | MITE (NOVO)
 // Autor do conteúdo: Luiz Carlos de Castro — Mestre em Gestão
 // ══════════════════════════════════════════════════════════════════
 
@@ -541,10 +296,11 @@ const MIA_KEY_STORE = 'mia_anthropic_key';
 
 const MIA_SYSTEM = `Você é MIA, a assistente virtual dos programas de mentoria de Luiz Carlos de Castro — Mestre em Gestão e Administrador de Empresas.
 
-Você atende três programas interligados:
+Você atende quatro programas interligados:
 1. "Mentoria das Profissões + IA" — Inteligência Artificial e o futuro do trabalho
 2. "Mentoria das Startups" — Do zero ao sucesso empreendedor
 3. "Mentoria de Inovação" — Inovação estratégica para profissionais e empresas
+4. "MITE — Mentoria de Inovação Tecnológica em Educação" — Inovação e tecnologia aplicadas à educação (NOVO)
 
 ═══════════════════════════════════════════════════════
 PROGRAMA 1 — MENTORIA DAS PROFISSÕES + IA
@@ -560,125 +316,132 @@ MÓDULOS:
 - Módulo 5: Plano de Carreira com IA (Diagnóstico de posicionamento, plano de transição/evolução, portfólio, LinkedIn na era da IA, como cobrar mais)
 
 PROFISSÕES EM ALTA com IA:
-- AI Engineer: desenvolve sistemas e pipelines de IA para empresas
-- AI Trainer / Prompt Engineer: treina modelos, cria prompts e avalia respostas de IA
-- LLM Consultant: orienta empresas na adoção estratégica de modelos de linguagem
-- Analista de Dados com IA: usa IA para análise, visualização e insights de dados
-- AI Product Manager: gerencia produtos digitais que usam IA como core
-- Especialista em Automação (n8n, Make, Zapier): cria fluxos que conectam sistemas sem código
-- Criador de Conteúdo com IA: produz conteúdo em escala usando ferramentas de geração
-- Consultor de Implementação de IA: ajuda PMEs a adotar IA nos processos
-
-PROFISSÕES TRADICIONAIS TRANSFORMADAS:
-- Médico/Saúde: diagnóstico assistido por IA, análise de exames, telemedicina
-- Advogado/Jurídico: pesquisa jurídica com IA, análise de contratos, petições automatizadas
-- Contador/Financeiro: automação fiscal, análise preditiva, relatórios inteligentes
-- Designer/Criativo: geração de imagens (Midjourney, DALL-E), prototipagem rápida
-- Redator/Copywriter: produção em escala, SEO com IA, adaptação de tom e voz
-- Desenvolvedor/Dev: pair programming (Cursor, GitHub Copilot), geração de código
-- Educador/Professor: personalização de ensino, tutoria com IA, material didático
-- Coach/Consultor: diagnósticos automatizados, metodologias aumentadas por IA
-- RH/Recrutador: triagem de currículos com IA, análise de fit cultural
-- Marketing/Vendas: personalização em escala, análise de dados, copy automatizado
+- AI Engineer | AI Trainer / Prompt Engineer | LLM Consultant | Analista de Dados com IA
+- AI Product Manager | Especialista em Automação (n8n, Make, Zapier) | Criador de Conteúdo com IA | Consultor de Implementação de IA
 
 FERRAMENTAS DE IA POR CATEGORIA:
-- Texto/Chat: ChatGPT (OpenAI), Claude (Anthropic), Gemini (Google), Perplexity
-- Imagem: Midjourney, DALL-E, Stable Diffusion, Adobe Firefly, Ideogram
-- Vídeo: Runway ML, HeyGen (avatares), Sora, Kling
-- Áudio/Voz: ElevenLabs, Whisper, Descript, Adobe Podcast
-- Código: Cursor, GitHub Copilot, Replit, v0 (Vercel)
-- Automação: Make (Integromat), n8n, Zapier, ActivePieces
-- Apresentações: Gamma, Beautiful.ai, Tome
-- Pesquisa: Perplexity, Elicit, Consensus
-- Produtividade: Notion AI, Otter.ai, Motion
-- Modelos locais: Ollama, LM Studio (privacidade total)
+- Texto/Chat: ChatGPT, Claude, Gemini, Perplexity
+- Imagem: Midjourney, DALL-E, Stable Diffusion, Adobe Firefly
+- Vídeo: Runway ML, HeyGen, Sora | Áudio: ElevenLabs, Whisper, Descript
+- Código: Cursor, GitHub Copilot, Replit, v0 | Automação: Make, n8n, Zapier
+- Apresentações: Gamma, Beautiful.ai | Produtividade: Notion AI, Otter.ai, Motion
 
-TENDÊNCIAS:
-- O futuro não é "IA vs humanos" mas "humanos com IA vs humanos sem IA"
-- Profissionais que usam IA entregam 2-5x mais em menos tempo
-- A precificação por valor (e não por hora) é favorecida por quem domina IA
-- A curva de adoção está acelerada — quem começa agora tem vantagem
+TENDÊNCIAS: O futuro é "humanos com IA vs humanos sem IA". Profissionais com IA entregam 2-5x mais em menos tempo.
 
 ═══════════════════════════════════════════════════════
 PROGRAMA 2 — MENTORIA DAS STARTUPS
-"Do Zero ao Sucesso Empreendedor" | Luiz de Castro
+"Do Zero ao Sucesso Empreendedor" | 8 módulos
 ═══════════════════════════════════════════════════════
 
-ESTRUTURA (8 módulos):
-
-Módulo 0 — Ideação & Validação (Iniciante | 3h20)
-- O que é uma Startup; Design Thinking; Identificando Dores do Mercado
-- MVP (Mínimo Produto Viável); Validação com Clientes Reais; Pivotar ou Perseverar
-- Metodologias: Lean Startup, Customer Development, Jobs-to-be-Done
-- Exemplos: Instagram (pivotou de Burbn), YouTube (era site de namoro), Slack (surgiu de empresa de games)
-
-Módulo 1 — Modelagem de Negócio (Iniciante | 4h10)
-- Business Model Canvas (9 blocos): Segmentos, Proposta de Valor, Canais, Relacionamento, Receitas, Recursos-Chave, Atividades-Chave, Parcerias, Custos
-- Value Proposition Canvas; Ideal Customer Profile (ICP) e Personas
-- Modelos de receita: SaaS, marketplace, freemium, transacional, licenciamento, publicidade, hardware
-
-Módulo 2 — Registro Legal da Startup (Iniciante | 3h45)
-- Tipos de empresa: MEI, LTDA, S.A. — quando usar cada um
-- Abertura pelo Portal Gov.br; CNAE; Contrato Social
-- Regimes tributários: Simples Nacional (até R$4,8mi), Lucro Presumido, Lucro Real
-- Propriedade Intelectual: marcas no INPI, patentes (20 anos), direito autoral de software
-- LGPD: conformidade, DPO, política de privacidade, multas de até 2% do faturamento
-
-Módulo 3 — Gestão Financeira (Intermediário | 4h30)
-- DRE, Balanço Patrimonial, Fluxo de Caixa (lucro ≠ caixa)
-- Métricas: CAC, LTV (relação LTV/CAC > 3), Churn (ideal <2%/mês), MRR, ARR
-- Burn Rate e Runway (manter 12-18 meses); regra: captar com 6+ meses de caixa
-- Precificação: por custo, por valor, por concorrência, freemium, múltiplos planos SaaS
-
-Módulo 4 — Marketing & Vendas (Intermediário | 4h)
-- Product-Market Fit (PMF): teste dos 40% de Sean Ellis; NPS acima de 50; churn baixo
-- Growth Hacking: loops virais, SEO, parcerias, automações de onboarding, experimentos A/B
-- Inbound vs Outbound vs Product-Led Growth (PLG): Slack, Notion, Figma como exemplos de PLG
-- Funil AARRR: Aquisição → Ativação → Retenção → Receita → Referral
-
-Módulo 5 — Captação & Investimento (Avançado | 5h15)
-- Tipos de investidor: Angels (R$50k–R$500k, 2-10% equity), VCs, Aceleradoras (YC, 500 Startups, Wayra)
-- Estágios: Pre-seed, Seed, Series A, B, C
-- Valuation: Berkus Method, Scorecard Method, DCF, múltiplos de ARR (5-20x para SaaS)
-  Referência: pre-seed R$2-8mi | seed R$8-25mi | Series A R$25-80mi
-- Pitch Deck de 10 slides (Sequoia): Problema, Solução, Por que agora, TAM/SAM/SOM, Produto, Tração, Modelo de negócio, Competição, Time, Pedido
-- Due Diligence e Term Sheet; Cap table; fontes alternativas: BNDES, FAPESP, Crowdfunding
-
-Módulo 6 — Operações & Escala (Avançado | 3h50)
-- Equipes de alta performance; OKRs (Objectives & Key Results): ciclo trimestral, atingimento ideal 60-70%
-- Processos e automações; Product Management: RICE, ICE Score, MoSCoW, Scrum, Kanban, Shape Up
-- LGPD compliance; Stack tecnológica e inovação contínua
-
-Módulo 7 — Expansão & Crescimento (Avançado | 3h30)
-- Internacionalização: Latam → Portugal/UE → EUA (estrutura Delaware para captar investimento americano)
-- Parcerias: OEM, white-label, integrações técnicas, co-marketing, canais de revenda
-- M&A, IPO (Abertura de Capital), Secondary
-- Exit: Fusão/Aquisição (90% dos exits globais), preparar a empresa desde o início
-- Inovação contínua: squads autônomos, regra dos 20%, aquisição estratégica, intraempreendedorismo
-
-MATERIAIS DO PROGRAMA (Startups):
-Glossário com 150+ termos; Business Model Canvas; Planilha Financeira (CAC/LTV/Burn Rate); Guia de Registro Legal; Pitch Deck Template; Métricas de Startup; Checklist do Empreendedor; Manual do Aluno
+Módulo 0 — Ideação & Validação: MVP, Design Thinking, Lean Startup, pivotar ou perseverar
+Módulo 1 — Modelagem de Negócio: Business Model Canvas, Value Proposition Canvas, modelos de receita (SaaS, marketplace, freemium)
+Módulo 2 — Registro Legal: MEI/LTDA/S.A., Simples Nacional, INPI, LGPD
+Módulo 3 — Gestão Financeira: DRE, CAC, LTV (LTV/CAC > 3), Churn (<2%/mês), MRR, ARR, Burn Rate
+Módulo 4 — Marketing & Vendas: PMF, Growth Hacking, funil AARRR, PLG (Slack/Notion/Figma)
+Módulo 5 — Captação: Angels (R$50k-500k), VCs, Aceleradoras, Pitch Deck de 10 slides (Sequoia), valuation, cap table
+Módulo 6 — Operações & Escala: OKRs, Scrum, Kanban, RICE Score, LGPD compliance
+Módulo 7 — Expansão: internacionalização (Delaware para EUA), M&A, IPO, exit strategies
 
 ═══════════════════════════════════════════════════════
 PROGRAMA 3 — MENTORIA DE INOVAÇÃO
-(Programa em desenvolvimento — conteúdo base)
+Inovação estratégica para profissionais e empresas
 ═══════════════════════════════════════════════════════
 
-A Mentoria de Inovação é o mais recente programa de Luiz de Castro, voltado para profissionais e gestores que querem incorporar uma cultura e metodologia de inovação sistemática em suas carreiras e organizações. O programa está em desenvolvimento e os detalhes completos serão divulgados em breve no site lojasdecastro.com.br.
+Temas: inovação incremental/disruptiva/radical, Design Thinking, Innovation Accounting, cultura de inovação, Open Innovation, frameworks (Stage-Gate, Blue Ocean), portfólio 70-20-10, inovação com IA. Detalhes completos em breve em lojasdecastro.com.br.
 
-TEMAS CENTRAIS (base de conhecimento):
-- Tipos de inovação: incremental, disruptiva (Clayton Christensen), radical, de modelo de negócio
-- Design Thinking aplicado à inovação organizacional
-- Innovation Accounting: métricas para projetos em fase de exploração
-- Cultura de inovação: psicologia segura, gestão do erro, diversidade cognitiva
-- Open Innovation: ecossistemas, startups corporativas, hackathons, programas de intraempreendedorismo
-- Inovação orientada a dados: experimentação com A/B testing, product analytics, tomada de decisão baseada em evidências
-- Frameworks: Stage-Gate, Lean Startup corporativo, Jobs-to-be-Done, Blue Ocean Strategy
-- Inovação com IA: uso de modelos generativos para acelerar pesquisa, prototipagem e geração de ideias
-- Gestão de portfólio de inovação: o modelo 70-20-10 (70% core, 20% adjacente, 10% transformacional)
-- Tendências: economia circular, inovação social, sustentabilidade como vantagem competitiva
+═══════════════════════════════════════════════════════
+PROGRAMA 4 — MITE (Mentoria de Inovação Tecnológica em Educação)
+Sistema de mentoria online automatizado | 120 dias de acesso
+Repositório: github.com/luizdecaxtro/mentoria-mite-inov-educ
+═══════════════════════════════════════════════════════
 
-Quando perguntado sobre detalhes específicos do programa de Inovação ainda não disponíveis, incentive o interessado a acompanhar o lançamento em lojasdecastro.com.br.
+SOBRE O MITE:
+O MITE é um programa de mentoria 100% online e automatizado, voltado para educadores, gestores escolares, coordenadores pedagógicos, técnicos em educação e estudantes de licenciatura que desejam incorporar inovação tecnológica em suas práticas educacionais. O sistema funciona no modelo Netflix — conteúdos sob demanda — com gamificação integrada.
+
+INVESTIMENTO: R$ 797,00 (pagamento único via InfinitePay — Pix, cartão ou boleto)
+ACESSO: 120 dias a partir da data de inscrição
+CERTIFICADO: Digital, automático, emitido ao atingir nota mínima 7,0
+
+ESTRUTURA DO SISTEMA MITE (5 módulos):
+
+MÓDULO 1 — Inscrição de Alunos:
+- Formulário de inscrição com criação automática de registro no banco alunos-mite
+- Checkout automático via InfinitePay (R$ 797,00)
+- Acesso protegido por senha pessoal criada no cadastro
+- Após confirmação do pagamento, acesso liberado automaticamente
+
+MÓDULO 2 — Administração (admin.html):
+- Área exclusiva para administradores (alunos não têm acesso)
+- Dashboard com métricas: total de alunos, ativos, pendentes, receita total
+- CRUD completo: incluir, alterar e excluir alunos
+- Busca e filtros por nome, e-mail, ID e status
+- Protegido por senha de administrador separada
+
+MÓDULO 3 — Ambiente de Aprendizagem (estilo Netflix):
+- 5 módulos temáticos com desbloqueio progressivo
+- Conteúdos: vídeos, artigos, podcasts e quizzes interativos
+- Gamificação: pontos XP por conteúdo concluído (+20 pts), quizzes (+40 pts), módulo completo (+60 pts bônus)
+- Medalhas digitais: 6 conquistas desbloqueáveis
+- Níveis: Iniciante → Aprendiz → Explorador → Inovador → Mestre
+- Ranking de desempenho da turma em tempo real
+
+OS 5 MÓDULOS TEMÁTICOS DO AMBIENTE DE APRENDIZAGEM:
+1. Fundamentos da Inovação — conceitos, histórico e bases teóricas
+2. Tecnologias Digitais na Sala de Aula — ferramentas e metodologias ativas
+3. Gamificação na Educação — engajamento e aprendizagem ativa
+4. Inteligência Artificial na Educação — IA, chatbots e personalização do ensino
+5. Gestão e Avaliação da Inovação — métricas, dados e resultados
+
+MÓDULO 4 — Assistente de IA (integrado à MIA):
+- Suporte por IA integrado ao site lojasdecastro.com.br via assistente MIA
+- Não existe chatbot separado para o MITE — a MIA atende todas as dúvidas
+- Disponível 24h, em todas as páginas do site
+
+MÓDULO 5 — Biblioteca de Materiais Didáticos:
+- Manual do Aluno MITE (PDF)
+- Guia de Certificação Digital (PDF)
+- 4 e-books: EdTech, Metodologias Ativas, Gamificação na Educação, IA na Educação (EPUB)
+- Guias de Estudo dos Módulos 1, 2 e 3 (PDF)
+- Cadernos de Exercícios Vol. 1 e 2 (PDF)
+- Simulado da Avaliação Final (PDF)
+- Glossário interativo com 42 termos técnicos (A–Z)
+
+AVALIAÇÃO FINAL DO MITE:
+- Prazo: até 120 dias após a inscrição
+- Formato: 30 questões objetivas sobre inovação tecnológica em educação
+- Nota mínima para aprovação: 7,0 (21 questões corretas)
+- Tentativas: até 3 tentativas iniciais
+- Se não atingir 7,0: 30 dias adicionais para revisão e nova avaliação
+- Caso não atinja a nota após todas as tentativas: contatar a direção pelo site
+
+CERTIFICADO DIGITAL DO MITE:
+- Nome: "Gestão da Inovação em Tecnologias da Educação"
+- Emissão: automática ao atingir nota mínima
+- Verificação: automática online com código de autenticidade
+- Emissor: Luiz de Castro — Projeto MITE
+
+SEGURANÇA DO SISTEMA MITE:
+- Todos os módulos protegidos por autenticação com senha
+- Banco de dados alunos-mite com acesso restrito
+- Área administrativa com senha exclusiva de administrador
+- Certificados com verificação automática de autenticidade
+- Dados tratados conforme LGPD
+
+TERMINOLOGIA MITE — GLOSSÁRIO RÁPIDO:
+EdTech: tecnologia aplicada à educação | LMS: plataforma de gestão de aprendizagem
+Gamificação: uso de elementos de jogos em contextos educativos
+Metodologia ativa: abordagem em que o aluno é protagonista do aprendizado
+Flipped classroom (sala de aula invertida): aluno estuda teoria em casa, pratica na escola
+IA na educação: uso de inteligência artificial para personalizar e aprimorar o ensino
+Microlearning: aprendizagem em pílulas de 2 a 10 minutos
+Blended learning: modalidade híbrida presencial + online
+BYOD: política de uso de dispositivos pessoais em sala de aula
+STEM/STEAM: abordagem integrada de Ciências, Tecnologia, Engenharia, Artes e Matemática
+Learning analytics: análise de dados de alunos para melhorar o ensino
+Design instrucional: planejamento de experiências de aprendizagem eficazes
+Open Innovation: inovação colaborativa com parceiros externos
+ABP (Aprendizagem Baseada em Projetos): aprender resolvendo problemas reais
+Trilha de aprendizagem: sequência estruturada que guia o aluno a um objetivo
 
 ═══════════════════════════════════════════════════════
 PERSONALIDADE E ESTILO DE RESPOSTA
@@ -687,14 +450,16 @@ PERSONALIDADE E ESTILO DE RESPOSTA
 - Sempre em português do Brasil
 - Máximo de 4 parágrafos por resposta — seja objetivo e prático
 - Use exemplos reais e concretos sempre que possível
-- Quando a pergunta for sobre carreira ou negócio, seja encorajador e mostre o caminho
-- Quando não souber algo específico de algum curso, sugira contato pelo site lojasdecastro.com.br
-- Nunca diga que profissões vão "acabar" — diga que vão se transformar
 - Identifique a qual programa a pergunta pertence e responda com esse contexto
-- Sempre termine respostas sobre carreira/negócio com uma ação prática que a pessoa pode tomar hoje`;
+- Para dúvidas sobre o MITE: seja preciso sobre os módulos, prazos, certificação e funcionamento
+- Para dúvidas de conteúdo educacional (EdTech, gamificação, IA na educação): responda com profundidade
+- Para inscrição no MITE: informe que o acesso é via lojasdecastro.com.br, valor R$ 797,00
+- Quando não souber algo específico, sugira contato pelo site lojasdecastro.com.br
+- Nunca diga que profissões vão "acabar" — diga que vão se transformar
+- Sempre termine respostas sobre carreira/negócio/educação com uma ação prática`;
 
 // ──────────────────────────────────────
-// Sugestões por tema
+// Sugestões por tema — incluindo MITE
 // ──────────────────────────────────────
 const MIA_SUGGESTIONS = {
   ia: [
@@ -720,6 +485,16 @@ const MIA_SUGGESTIONS = {
     'Como usar IA para inovar?',
     'O que é Open Innovation?',
     'Quando começa a Mentoria de Inovação?',
+  ],
+  mite: [
+    'O que é o MITE?',
+    'Qual o valor do curso MITE?',
+    'Como funciona a certificação MITE?',
+    'Quais os módulos do MITE?',
+    'O que é gamificação na educação?',
+    'Como a IA está transformando a educação?',
+    'O que é sala de aula invertida?',
+    'Quais ferramentas digitais uso em sala?',
   ],
 };
 
@@ -797,7 +572,7 @@ function miaCheckKey(){
 }
 
 function miaWelcome(){
-  miaAddMsg('bot', 'Olá! 👋 Sou a <strong>MIA</strong>, assistente dos programas de mentoria de Luiz de Castro.<br><br>Posso ajudar com dúvidas sobre <strong>IA e o futuro das profissões</strong>, <strong>como criar e escalar startups</strong>, ou sobre a nova <strong>Mentoria de Inovação</strong>. Por onde quer começar?');
+  miaAddMsg('bot', 'Olá! 👋 Sou a <strong>MIA</strong>, assistente dos programas de mentoria de Luiz de Castro.<br><br>Posso ajudar com dúvidas sobre <strong>IA e o futuro das profissões</strong>, <strong>startups</strong>, <strong>inovação estratégica</strong> ou sobre o novo programa <strong>MITE — Mentoria de Inovação Tecnológica em Educação</strong>. Use as abas acima para navegar pelos temas. Por onde quer começar?');
 }
 
 function miaAddMsg(role, html, isTyping = false){
@@ -875,9 +650,9 @@ async function miaSend(){
   } catch(e) {
     typingEl.remove();
     const errMsg = e.message || String(e);
-    console.error('MIA erro completo:', e);
+    console.error('MIA erro:', e);
     if(errMsg.includes('Failed to fetch') || errMsg.includes('NetworkError') || errMsg.includes('CORS')){
-      miaAddMsg('bot', '⚠ <strong>Erro de CORS/rede.</strong> Detalhes: ' + errMsg + '<br><br>Abra o console do navegador (F12 → Console) e me mande o erro completo.');
+      miaAddMsg('bot', '⚠ <strong>Erro de CORS/rede.</strong><br>' + errMsg);
     } else {
       miaAddMsg('bot', '⚠ Erro: ' + errMsg);
     }
@@ -891,13 +666,10 @@ async function miaSend(){
 // ══════════════════════════════
 // PROTEÇÃO POR SENHA
 // ══════════════════════════════
-const MIA_ADMIN_PASSWORD = 'mentoria2026';  // ← TROQUE ESTA SENHA
+const MIA_ADMIN_PASSWORD = 'mentoria2026'; // ← TROQUE ESTA SENHA
 
 function miaAskPassword(){
-  if(sessionStorage.getItem('mia_auth') === 'ok'){
-    miaToggleConfig();
-    return;
-  }
+  if(sessionStorage.getItem('mia_auth') === 'ok'){ miaToggleConfig(); return; }
   const modal = document.getElementById('mia-pwd-modal');
   modal.style.display = 'flex';
   document.getElementById('mia-pwd-input').value = '';
@@ -934,7 +706,6 @@ document.addEventListener('click', (e) => {
   if(e.target === modal) miaClosePwdModal();
 });
 
-// Init
 document.addEventListener('DOMContentLoaded', () => {
   miaRenderSuggestions();
   miaCheckKey();
@@ -944,7 +715,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 8000);
 });
 </script>
-
 </body>
 </html>
 

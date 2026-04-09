@@ -88,5 +88,15 @@
     "sexo": "F",
     "instrucao": "Pós-Graduação",
     "criadoEm": "2026-04-08T01:10:47.599Z"
+  },
+  {
+    "id": "id_1775697557102",
+    "codigo": "MIA-20260015",
+    "nome": "Luiz de Castro",
+    "email": "profuema@gmail.com",
+    "celular": "(98) 98880-4678",
+    "sexo": "M",
+    "instrucao": "Mestrado",
+    "criadoEm": "2026-04-09T01:19:17.103Z"
   }
 ]
